@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Buyer {
+public class Buyer extends User {
     private List<Seller> listSellers;
 }
