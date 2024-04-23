@@ -1,0 +1,66 @@
+{
+  "userId": 123,
+  "userName": "JohnDoe",
+  "listPost": [
+    {
+      "idPost": 1,
+      "userId": 123,
+      "date": "2024-04-23",
+      "category": 1,
+      "price": 50.0,
+      "product": {
+        "productId": 1,
+        "productName": "Product1",
+        "typeProduct": "TypeA",
+        "brand": "BrandX",
+        "color": "Blue",
+        "notes": "Some notes about Product1"
+      }
+    },
+    {
+      "idPost": 2,
+      "userId": 123,
+      "date": "2024-04-24",
+      "category": 2,
+      "price": 75.0,
+      "product": {
+        "productId": 2,
+        "productName": "Product2",
+        "typeProduct": "TypeB",
+        "brand": "BrandY",
+        "color": "Red",
+        "notes": "Some notes about Product2"
+      }
+    }
+  ],
+  "listProduct": [
+    {
+      "productId": 1,
+      "productName": "Product1",
+      "typeProduct": "TypeA",
+      "brand": "BrandX",
+      "color": "Blue",
+      "notes": "Some notes about Product1"
+    },
+    {
+      "productId": 2,
+      "productName": "Product2",
+      "typeProduct": "TypeB",
+      "brand": "BrandY",
+      "color": "Red",
+      "notes": "Some notes about Product2"
+    }
+  ],
+  "listFollowers": [
+    {
+      "userId": 456,
+      "userName": "JaneDoe",
+      "listSellers": []
+    },
+    {
+      "userId": 789,
+      "userName": "AliceSmith",
+      "listSellers": []
+    }
+  ]
+}

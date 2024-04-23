@@ -11,10 +11,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 
 public class Post {
-    private int id_post;
-    private int user_id;
+    private int idPost;
+    private int userId;
     private LocalDate date;
     private int category;
     private double price;
-
+    Product product;
 }
