@@ -5,14 +5,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Seller extends User{
+public class Seller {
+    private int userId;
+    private String userName;
     private List<Post> listPost;
     private List<Product> listProduct;
-    private List<Buyer>  listFollowers;
+    private Set<Buyer> listFollowers = new HashSet<>();
+
+    public boolean addFollower(Buyer buyer){
+        return listFollowers.add(buyer);
+    }
 }

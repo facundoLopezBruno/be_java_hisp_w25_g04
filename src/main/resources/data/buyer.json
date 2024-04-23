@@ -1,0 +1,12 @@
+[
+  {
+    "userId": 456,
+    "userName": "JaneDoe",
+    "listSellers": []
+  },
+  {
+    "userId": 789,
+    "userName": "AliceSmith",
+    "listSellers": []
+  }
+]
