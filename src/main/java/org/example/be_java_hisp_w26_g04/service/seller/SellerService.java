@@ -8,10 +8,7 @@ import java.util.Optional;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
-import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
-import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
-import org.example.be_java_hisp_w26_g04.dto.PostDto;
-import org.example.be_java_hisp_w26_g04.dto.UserDto;
+import org.example.be_java_hisp_w26_g04.dto.*;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.exceptions.NotFoundException;
 import org.example.be_java_hisp_w26_g04.model.Post;
@@ -62,27 +59,28 @@ public class SellerService implements ISellerService {
     }
 
   @Override
-  public List<PostDto> getPostsFromFollower(int userId) {
+  public List<PostResponseDto> getPostsFromFollower(int userId) {
       Set<Seller> sellers = sellerRepository.findAll();
-      List<PostDto> posts = new ArrayList<>();
+      List<PostResponseDto> posts = new ArrayList<>();
       for(Seller seller: sellers) {
           if(seller.getFollowers().contains(userId)) {
               for(Post post: seller.getListPost()) {
-                  PostDto postDto = objectMapper.convertValue(post, PostDto.class);
+                  PostResponseDto postDto = objectMapper.convertValue(post, PostResponseDto.class);
                   posts.add(postDto);
               }
           }
       }
-      posts.sort(Comparator.comparing(PostDto::getDate));
+      posts.sort(Comparator.comparing(PostResponseDto::getDate));
       return posts;
   }
 
   @Override
-    public boolean createNewPost(Post post){
+    public boolean createNewPost(PostRequestDto post){
         Optional<Seller> optionalSeller = sellerRepository.findById(post.getUserId());
         if (optionalSeller.isEmpty()){
             throw new BadRequestException();
         }
-        return sellerRepository.save(post);
+      Post postFounded = objectMapper.convertValue(post, Post.class);
+        return sellerRepository.save(postFounded);
     }
 }

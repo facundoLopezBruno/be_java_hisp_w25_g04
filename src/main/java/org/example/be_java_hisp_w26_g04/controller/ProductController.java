@@ -1,5 +1,6 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
+import org.example.be_java_hisp_w26_g04.dto.PostRequestDto;
 import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class ProductController {
     ISellerService sellerService;
 
     @PostMapping("/post")
-    public ResponseEntity<?> createPost(@RequestBody Post post){
+    public ResponseEntity<?> createPost(@RequestBody PostRequestDto post){
         if(sellerService.createNewPost(post)){
             return ResponseEntity.ok().build();
         } else{
