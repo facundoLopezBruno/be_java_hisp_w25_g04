@@ -6,5 +6,6 @@ import java.util.Optional;
 
 public interface IBuyerService {
     void followSeller(int buyerId, int sellerId);
-    Optional<Buyer> findById(int id);
+    Optional<Buyer> getById(int id);
+    void unfollowerSeller(int userId, int userIdToUnfollow);
 }
