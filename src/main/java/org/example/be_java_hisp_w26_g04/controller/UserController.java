@@ -1,6 +1,8 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
 import java.util.Optional;
+
+import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
 import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
 import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDto;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
@@ -43,12 +45,9 @@ public class UserController {
 
   @GetMapping("/{userId}/followed/list")
   public ResponseEntity<?> getSellerList(@PathVariable int userId) {
-    Optional<Buyer> buyer = buyerService.getById(userId);
-    if (buyer.isPresent()) {
-      return new ResponseEntity<>(buyer.get(), HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>("No se encuentra el usuario con id: " + userId, HttpStatus.NOT_FOUND);//return ResponseEntity.badRequest().build();
-    }
+    BuyerDTO buyer = buyerService.getById(userId);
+      return new ResponseEntity<>(buyer, HttpStatus.OK);
+
   }
 
   @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
