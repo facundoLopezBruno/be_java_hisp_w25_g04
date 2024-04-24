@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
-    @ExceptionHandler(BadRequeestException.class)
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> badRequest() {
         return ResponseEntity.badRequest().build();
     }
