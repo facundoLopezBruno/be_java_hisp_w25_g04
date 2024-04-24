@@ -13,7 +13,9 @@ import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -50,12 +52,11 @@ public class SellerService implements ISellerService {
 
     return new SellerFollowersDto(seller.getUserId(), seller.getUserName(), followers);
   }
-  //revisar
   @Override
     public boolean createNewPost(Post post){
         Optional<Seller> optionalSeller = sellerRepository.findById(post.getUserId());
         if (optionalSeller.isEmpty()){
-            throw new NotFoundException();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         return sellerRepository.save(post);
     }
