@@ -14,7 +14,7 @@ public class Post {
     private int idPost;
     private int userId;
     private LocalDate date;
+    Product product;
     private int category;
     private double price;
-    Product product;
 }

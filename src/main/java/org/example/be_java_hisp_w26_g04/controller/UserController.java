@@ -21,7 +21,6 @@ public class UserController {
         buyerService.followSeller(userId, userIdToFollow);
         return ResponseEntity.ok().build();
     }
-branch
     @GetMapping("/{userId}/followed/list")
     public ResponseEntity<?> getSellerList(@PathVariable int userId){
         Optional<Buyer> buyer= buyerService.findById(userId);

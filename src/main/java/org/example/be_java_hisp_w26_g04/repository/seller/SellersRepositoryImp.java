@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -39,6 +40,19 @@ public class SellersRepositoryImp implements ISellerRepository {
         idCounter++;
         seller.setUserId(idCounter);
         return sellers.add(seller);
+    }
+    @Override
+    public boolean save(Post post){
+        Optional<Seller> optionalSeller = sellers.stream()
+                .filter(x -> x.getUserId() == post.getUserId())
+                .findFirst();
+
+        if (optionalSeller.isPresent()) {
+            optionalSeller.get().getListPost().add(post);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void populate() throws IOException {
