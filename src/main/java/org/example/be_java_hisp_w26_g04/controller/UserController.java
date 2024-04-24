@@ -52,4 +52,5 @@ public class UserController {
     buyerService.unfollowerSeller(userId, userIdToUnfollow);
     return ResponseEntity.ok().build();
   }
+
 }

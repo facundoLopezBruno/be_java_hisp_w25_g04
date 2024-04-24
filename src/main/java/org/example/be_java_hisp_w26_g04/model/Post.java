@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Post {
     private int idPost;
     private int userId;
