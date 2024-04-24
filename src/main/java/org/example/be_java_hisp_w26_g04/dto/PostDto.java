@@ -15,8 +15,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PostDto {
     @JsonProperty("post_id")
+    @JsonAlias("idPost")
     private int idPost;
     @JsonProperty("user_id")
+    @JsonAlias("userId")
     private int userId;
     @JsonProperty("date")
     private LocalDate date;
