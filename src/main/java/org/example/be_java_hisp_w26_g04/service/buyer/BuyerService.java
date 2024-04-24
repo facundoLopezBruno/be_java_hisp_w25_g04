@@ -1,6 +1,9 @@
 package org.example.be_java_hisp_w26_g04.service.buyer;
 
+import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
+import org.example.be_java_hisp_w26_g04.dto.UserDto;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
+import org.example.be_java_hisp_w26_g04.exceptions.NotFoundException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
@@ -8,6 +11,8 @@ import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,9 +34,18 @@ public class BuyerService implements IBuyerService {
     }
 
     @Override
-    public Optional<Buyer> getById(int id) {
-        //Retorna un comprador si existe, caso contrario retorna null
-        return buyersRepository.findById(id);
+    public BuyerDTO getById(int id) {
+
+        if(buyersRepository.findById(id).isEmpty())
+            throw new NotFoundException("No existe el id: "+id);
+        Buyer buyer=buyersRepository.findById(id).get();
+        List<Seller> sellerList=buyer.getListSellers().stream().toList();
+        List<UserDto> userDtoList= new ArrayList<>();
+        for(Seller seller: sellerList){
+            userDtoList.add(new UserDto(seller.getUserId(), seller.getUserName() ));
+        }
+
+        return new BuyerDTO(buyer.getUserId(), buyer.getUserName(), userDtoList);
     }
 
     @Override
