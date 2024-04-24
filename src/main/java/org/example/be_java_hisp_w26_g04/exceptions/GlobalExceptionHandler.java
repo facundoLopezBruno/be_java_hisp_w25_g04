@@ -5,15 +5,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 
-@ControllerAdvice
+@ControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
+  @ExceptionHandler(BadRequestException.class)
+  public ResponseEntity<?> badRequest() {
+    return ResponseEntity.badRequest().build();
+  }
+
   @ExceptionHandler(NotFoundException.class)
   public ResponseEntity<BadResponseDto> handleNotFoundException(NotFoundException ex) {
     BadResponseDto badResponseDto = new BadResponseDto(
         ex.getMessage(), HttpStatus.NOT_FOUND.value()
     );
-
-    return new ResponseEntity<>(badResponseDto, HttpStatus.NOT_FOUND);
   }
 }
