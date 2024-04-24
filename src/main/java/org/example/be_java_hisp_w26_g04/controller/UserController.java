@@ -2,6 +2,7 @@ package org.example.be_java_hisp_w26_g04.controller;
 
 import java.util.Optional;
 import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
+import org.example.be_java_hisp_w26_g04.dto.PostDto;
 import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDto;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.service.buyer.IBuyerService;
@@ -56,4 +57,11 @@ public class UserController {
     buyerService.unfollowerSeller(userId, userIdToUnfollow);
     return ResponseEntity.ok().build();
   }
+
+  @GetMapping("/products/followed/{userId}/list")
+  public ResponseEntity<?> getPostsFromFollower(@PathVariable int userId) {
+    return ResponseEntity.ok().body(sellerService.getPostsFromFollower(userId));
+  }
+
+
 }
