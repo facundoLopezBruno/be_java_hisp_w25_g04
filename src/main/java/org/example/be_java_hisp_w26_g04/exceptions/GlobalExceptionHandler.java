@@ -19,5 +19,7 @@ public class GlobalExceptionHandler {
     BadResponseDto badResponseDto = new BadResponseDto(
         ex.getMessage(), HttpStatus.NOT_FOUND.value()
     );
+
+    return new ResponseEntity<>(badResponseDto, HttpStatus.NOT_FOUND);
   }
 }
