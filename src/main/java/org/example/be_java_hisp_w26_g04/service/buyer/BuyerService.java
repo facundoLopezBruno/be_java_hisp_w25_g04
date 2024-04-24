@@ -1,6 +1,9 @@
 package org.example.be_java_hisp_w26_g04.service.buyer;
 
+import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
+import org.example.be_java_hisp_w26_g04.dto.UserDto;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
+import org.example.be_java_hisp_w26_g04.exceptions.NotFoundException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
@@ -8,6 +11,8 @@ import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,18 +25,29 @@ public class BuyerService implements IBuyerService {
 
     @Override
     public void followSeller(int buyerId, int sellerId) {
-        Buyer buyer = buyersRepository.findById(buyerId).orElseThrow(RuntimeException::new);
-        Seller seller = sellerRepository.findById(sellerId).orElseThrow(RuntimeException::new);
+        Buyer buyer = buyersRepository.findById(buyerId).orElseThrow(BadRequestException::new);
+        Seller seller = sellerRepository.findById(sellerId).orElseThrow(BadRequestException::new);
 
         if (!buyer.addFollow(seller) || !seller.addFollower(buyer)) {
-            throw new RuntimeException();
+            throw new BadRequestException();
         }
     }
 
     @Override
-    public Optional<Buyer> getById(int id) {
-        //Retorna un comprador si existe, caso contrario retorna null
-        return buyersRepository.findById(id);
+    public BuyerDTO getById(int id) {
+
+        if(buyersRepository.findById(id).isEmpty())
+            throw new NotFoundException("No existe el id: "+id);
+        Buyer buyer=buyersRepository.findById(id).get();
+        List<Seller> sellerList = buyer.getSellersFollowing().stream()
+        .map(x -> sellerRepository.findById(x)).filter(Optional::isPresent)
+                .map(Optional::get).toList();
+        List<UserDto> userDtoList= new ArrayList<>();
+        for(Seller seller: sellerList){
+            userDtoList.add(new UserDto(seller.getUserId(), seller.getUserName() ));
+        }
+
+        return new BuyerDTO(buyer.getUserId(), buyer.getUserName(), userDtoList);
     }
 
     @Override
@@ -42,7 +58,7 @@ public class BuyerService implements IBuyerService {
         Optional<Seller> seller = sellerRepository.findById(userIdToUnfollow);
         if (seller.isEmpty()) throw new BadRequestException();
 
-        buyer.get().getListSellers().remove(seller.get());
-        seller.get().getListFollowers().remove(buyer.get());
+        buyer.get().getSellersFollowing().remove(seller.get().getUserId());
+        seller.get().getFollowers().remove(buyer.get().getUserId());
     }
 }

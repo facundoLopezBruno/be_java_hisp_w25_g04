@@ -1,15 +1,13 @@
 package org.example.be_java_hisp_w26_g04.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Seller {
@@ -17,9 +15,9 @@ public class Seller {
     private String userName;
     private List<Post> listPost;
     private List<Product> listProduct;
-    private Set<Buyer> listFollowers = new HashSet<>();
+    private Set<Integer> followers = new HashSet<>();
 
     public boolean addFollower(Buyer buyer){
-        return listFollowers.add(buyer);
+        return followers.add(buyer.getUserId());
     }
 }

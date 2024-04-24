@@ -1,10 +1,8 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
-import java.util.Optional;
+import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
 import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
-import org.example.be_java_hisp_w26_g04.dto.PostDto;
-import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDto;
-import org.example.be_java_hisp_w26_g04.model.Buyer;
+import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
 import org.example.be_java_hisp_w26_g04.service.buyer.IBuyerService;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,7 @@ public class UserController {
   }
 
   @GetMapping("/{userId}/followers/list")
-  public ResponseEntity<SellerFollowersDto> getFollowers(@PathVariable int userId) {
+  public ResponseEntity<SellerFollowersDTO> getFollowers(@PathVariable int userId) {
     return ResponseEntity.ok().body(sellerService.getFollowers(userId));
   }
 
@@ -44,12 +42,9 @@ public class UserController {
 
   @GetMapping("/{userId}/followed/list")
   public ResponseEntity<?> getSellerList(@PathVariable int userId) {
-    Optional<Buyer> buyer = buyerService.getById(userId);
-    if (buyer.isPresent()) {
-      return new ResponseEntity<>(buyer.get(), HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>("No se encuentra el usuario con id: " + userId, HttpStatus.NOT_FOUND);//return ResponseEntity.badRequest().build();
-    }
+    BuyerDTO buyer = buyerService.getById(userId);
+      return new ResponseEntity<>(buyer, HttpStatus.OK);
+
   }
 
   @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
@@ -57,11 +52,5 @@ public class UserController {
     buyerService.unfollowerSeller(userId, userIdToUnfollow);
     return ResponseEntity.ok().build();
   }
-
-  @GetMapping("/products/followed/{userId}/list")
-  public ResponseEntity<?> getPostsFromFollower(@PathVariable int userId) {
-    return ResponseEntity.ok().body(sellerService.getPostsFromFollower(userId));
-  }
-
 
 }

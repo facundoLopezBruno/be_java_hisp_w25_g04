@@ -6,13 +6,16 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserDto {
-  @JsonProperty("user_id")
-  int id;
+import java.util.List;
 
-  @JsonProperty("user_name")
-  String username;
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class BuyerDTO {
+    @JsonProperty("user_id")
+    private int userId;
+    @JsonProperty("user_name")
+    private String userName;
+
+    private List<UserDto> followed;
 }
