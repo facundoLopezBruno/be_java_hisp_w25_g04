@@ -5,7 +5,6 @@ import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,5 +25,11 @@ public class BuyerService implements IBuyerService{
         if(!buyer.addFollow(seller) || !seller.addFollower(buyer)) {
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public Optional<Buyer> findById(int id) {
+        //Retorna un comprador si existe, caso contrario retorna null
+        return buyersRepository.findById(id);
     }
 }
