@@ -24,7 +24,6 @@ public class SellersRepositoryImp implements ISellerRepository {
     public SellersRepositoryImp() throws IOException {
         populate();
     }
-
     @Override
     public Set<Seller> findAll() {
         return  sellers;
