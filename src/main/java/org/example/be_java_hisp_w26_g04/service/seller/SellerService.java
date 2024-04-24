@@ -3,6 +3,7 @@ package org.example.be_java_hisp_w26_g04.service.seller;
 import java.util.List;
 import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDto;
 import org.example.be_java_hisp_w26_g04.dto.UserDto;
+import org.example.be_java_hisp_w26_g04.exception.NotFoundException;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class SellerService implements ISellerService {
 
   @Override
   public SellerFollowersDto getFollowers(int userId) {
-    // TODO: Create a coherent Exception to be thrown here
-    Seller seller = sellerRepository.findById(userId).orElseThrow(RuntimeException::new);
+    Seller seller = sellerRepository.findById(userId)
+        .orElseThrow(() -> new NotFoundException("Seller with id " + userId + " not found"));
 
     return converSellerToSellerFollowersDto(seller);
   }
