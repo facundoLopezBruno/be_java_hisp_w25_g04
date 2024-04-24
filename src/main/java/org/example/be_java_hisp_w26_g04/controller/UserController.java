@@ -24,7 +24,7 @@ public class UserController {
 
     @GetMapping("/{userId}/followed/list")
     public ResponseEntity<?> getSellerList(@PathVariable int userId){
-        Optional<Buyer> buyer= buyerService.findById(userId);
+        Optional<Buyer> buyer= buyerService.getById(userId);
         if(buyer.isPresent()){
             return new ResponseEntity<>(buyer.get(), HttpStatus.OK);
         }
@@ -33,4 +33,9 @@ public class UserController {
         }
     }
 
+    @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
+    public ResponseEntity<?> unfollow(@PathVariable int userId, @PathVariable int userIdToUnfollow){
+        buyerService.unfollowerSeller(userId, userIdToUnfollow);
+        return ResponseEntity.ok().build();
+    }
 }
