@@ -51,16 +51,6 @@
       "notes": "Some notes about Product2"
     }
   ],
-  "listFollowers": [
-    {
-      "userId": 456,
-      "userName": "JaneDoe",
-      "listSellers": []
-    },
-    {
-      "userId": 789,
-      "userName": "AliceSmith",
-      "listSellers": []
-    }
+  "followers": [
   ]
 }
