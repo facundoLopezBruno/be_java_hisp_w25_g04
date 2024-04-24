@@ -2,11 +2,14 @@ package org.example.be_java_hisp_w26_g04.service.seller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
 import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDto;
 import org.example.be_java_hisp_w26_g04.dto.UserDto;
 import org.example.be_java_hisp_w26_g04.exceptions.NotFoundException;
+import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,4 +50,13 @@ public class SellerService implements ISellerService {
 
     return new SellerFollowersDto(seller.getUserId(), seller.getUserName(), followers);
   }
+  //revisar
+  @Override
+    public boolean createNewPost(Post post){
+        Optional<Seller> optionalSeller = sellerRepository.findById(post.getUserId());
+        if (optionalSeller.isEmpty()){
+            throw new NotFoundException();
+        }
+        return sellerRepository.save(post);
+    }
 }
