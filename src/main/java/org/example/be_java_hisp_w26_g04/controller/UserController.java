@@ -1,11 +1,8 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
-import java.util.Optional;
-
 import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
 import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
-import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDto;
-import org.example.be_java_hisp_w26_g04.model.Buyer;
+import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
 import org.example.be_java_hisp_w26_g04.service.buyer.IBuyerService;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +31,7 @@ public class UserController {
   }
 
   @GetMapping("/{userId}/followers/list")
-  public ResponseEntity<SellerFollowersDto> getFollowers(@PathVariable int userId) {
+  public ResponseEntity<SellerFollowersDTO> getFollowers(@PathVariable int userId) {
     return ResponseEntity.ok().body(sellerService.getFollowers(userId));
   }
 
