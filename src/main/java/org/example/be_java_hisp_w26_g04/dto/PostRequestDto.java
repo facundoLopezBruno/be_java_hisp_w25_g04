@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -17,6 +18,7 @@ public class PostRequestDto {
     @JsonProperty("user_id")
     private int userId;
     @JsonProperty("date")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate date;
     @JsonProperty("category")
     private int category;
