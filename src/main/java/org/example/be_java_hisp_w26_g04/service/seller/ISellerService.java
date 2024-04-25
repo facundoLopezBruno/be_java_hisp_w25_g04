@@ -11,9 +11,13 @@ import java.util.List;
 public interface ISellerService {
   SellerFollowersDTO getFollowers(int userId);
 
+  SellerFollowersDTO sortGetFollowers(int userId, String order);
+
   FollowersCountDTO findFollowers(int sellerId);
 
   boolean createNewPost(PostRequestDto post);
 
   List<PostResponseDto> getPostsFromFollower(int userId);
+
+  List<PostResponseDto> sortGetPostFromFollower(int userId, String order);
 }

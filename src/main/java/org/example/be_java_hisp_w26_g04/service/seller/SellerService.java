@@ -49,6 +49,21 @@ public class SellerService implements ISellerService {
     return converSellerToSellerFollowersDto(seller);
   }
 
+    @Override
+    public SellerFollowersDTO sortGetFollowers(int userId, String order) {
+      SellerFollowersDTO sellerFollowersDTO= getFollowers(userId);
+      if(order.equals("name_asc")){
+          sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDto::getUsername));
+      } else if (order.equals("name_desc")) {
+          sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDto::getUsername).reversed());
+
+      }
+      else{
+          throw new BadRequestException();
+      }
+        return sellerFollowersDTO;
+    }
+
     private SellerFollowersDTO converSellerToSellerFollowersDto(Seller seller) {
         List<UserDto> followers = seller.getFollowers().stream()
                 .map(x -> buyerRepository.findById(x)).filter(Optional::isPresent).map(x -> x.get())
@@ -74,7 +89,19 @@ public class SellerService implements ISellerService {
       return posts;
   }
 
-  @Override
+    @Override
+    public List<PostResponseDto> sortGetPostFromFollower(int userId, String order) {
+        List<PostResponseDto> ListPostDTO= getPostsFromFollower(userId);
+        if (order.contains("date_asc")) {
+            ListPostDTO.sort(Comparator.comparing(PostResponseDto::getDate));
+        } else if (order.contains("date_desc")) {
+                     ListPostDTO.sort(Comparator.comparing(PostResponseDto::getDate).reversed());
+        }
+        else {throw new BadRequestException();}
+        return ListPostDTO;
+    }
+
+    @Override
     public boolean createNewPost(PostRequestDto post){
         Optional<Seller> optionalSeller = sellerRepository.findById(post.getUserId());
         if (optionalSeller.isEmpty()){
