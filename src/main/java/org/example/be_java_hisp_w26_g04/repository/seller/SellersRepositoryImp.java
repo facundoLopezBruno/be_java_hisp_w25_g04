@@ -66,7 +66,8 @@ public class SellersRepositoryImp implements ISellerRepository {
         objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"));
+        objectMapper.setDateFormat(new SimpleDateFormat("YYYY-MM-dd HH:mm:ss"));
+
         Resource resource = new ClassPathResource("data/seller.json");
         sellers = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
         });
