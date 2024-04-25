@@ -1,8 +1,7 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
-import org.example.be_java_hisp_w26_g04.dto.PostRequestDto;
-import org.example.be_java_hisp_w26_g04.dto.PostResponseDto;
-import org.example.be_java_hisp_w26_g04.model.Post;
+import org.example.be_java_hisp_w26_g04.dto.PostRequestDTO;
+import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ public class ProductController {
     ISellerService sellerService;
 
     @PostMapping("/post")
-    public ResponseEntity<?> createPost(@RequestBody PostRequestDto post){
+    public ResponseEntity<?> createPost(@RequestBody PostRequestDTO post){
         if(sellerService.createNewPost(post)){
             return ResponseEntity.ok().build();
         } else{
@@ -26,7 +25,7 @@ public class ProductController {
     }
 
     @GetMapping("/followed/{userId}/list")
-    public ResponseEntity<List<PostResponseDto>> getPostsFromFollower(
+    public ResponseEntity<List<PostResponseDTO>> getPostsFromFollower(
             @PathVariable int userId,
             @RequestParam(required = false, value = "order") String order
     ) {

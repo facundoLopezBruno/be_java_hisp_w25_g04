@@ -1,7 +1,7 @@
 package org.example.be_java_hisp_w26_g04.service.buyer;
 
 import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
-import org.example.be_java_hisp_w26_g04.dto.UserDto;
+import org.example.be_java_hisp_w26_g04.dto.UserDTO;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.exceptions.NotFoundException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
@@ -43,9 +43,9 @@ public class BuyerService implements IBuyerService {
         List<Seller> sellerList = buyer.getSellersFollowing().stream()
         .map(x -> sellerRepository.findById(x)).filter(Optional::isPresent)
                 .map(Optional::get).toList();
-        List<UserDto> userDtoList= new ArrayList<>();
+        List<UserDTO> userDtoList= new ArrayList<>();
         for(Seller seller: sellerList){
-            userDtoList.add(new UserDto(seller.getUserId(), seller.getUserName() ));
+            userDtoList.add(new UserDTO(seller.getUserId(), seller.getUserName() ));
         }
 
         return new BuyerDTO(buyer.getUserId(), buyer.getUserName(), userDtoList);
@@ -67,9 +67,9 @@ public class BuyerService implements IBuyerService {
     public BuyerDTO sortGetFollowed(int userId, String order) {
         BuyerDTO buyerDTO= getFollowed(userId);
         if(order.equals("name_asc")){
-            buyerDTO.getFollowed().sort(Comparator.comparing(UserDto::getUsername));
+            buyerDTO.getFollowed().sort(Comparator.comparing(UserDTO::getUsername));
         } else if (order.equals("name_desc")) {
-            buyerDTO.getFollowed().sort(Comparator.comparing(UserDto::getUsername).reversed());
+            buyerDTO.getFollowed().sort(Comparator.comparing(UserDTO::getUsername).reversed());
         }
         else{
             throw new BadRequestException();

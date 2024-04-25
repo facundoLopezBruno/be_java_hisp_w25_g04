@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,5 +18,5 @@ public class SellerFollowersDTO {
   @JsonProperty("user_name")
   String username;
 
-  List<UserDto> followers;
+  List<UserDTO> followers;
 }

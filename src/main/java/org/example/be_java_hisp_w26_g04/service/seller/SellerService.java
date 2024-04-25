@@ -53,9 +53,9 @@ public class SellerService implements ISellerService {
     public SellerFollowersDTO sortGetFollowers(int userId, String order) {
       SellerFollowersDTO sellerFollowersDTO= getFollowers(userId);
       if(order.equals("name_asc")){
-          sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDto::getUsername));
+          sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDTO::getUsername));
       } else if (order.equals("name_desc")) {
-          sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDto::getUsername).reversed());
+          sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDTO::getUsername).reversed());
 
       }
       else{
@@ -65,44 +65,44 @@ public class SellerService implements ISellerService {
     }
 
     private SellerFollowersDTO converSellerToSellerFollowersDto(Seller seller) {
-        List<UserDto> followers = seller.getFollowers().stream()
+        List<UserDTO> followers = seller.getFollowers().stream()
                 .map(x -> buyerRepository.findById(x)).filter(Optional::isPresent).map(x -> x.get())
-                .map(follower -> new UserDto(follower.getUserId(), follower.getUserName()))
+                .map(follower -> new UserDTO(follower.getUserId(), follower.getUserName()))
                 .toList();
 
         return new SellerFollowersDTO(seller.getUserId(), seller.getUserName(), followers);
     }
 
   @Override
-  public List<PostResponseDto> getPostsFromFollower(int userId) {
+  public List<PostResponseDTO> getPostsFromFollower(int userId) {
       Set<Seller> sellers = sellerRepository.findAll();
-      List<PostResponseDto> posts = new ArrayList<>();
+      List<PostResponseDTO> posts = new ArrayList<>();
       for(Seller seller: sellers) {
           if(seller.getFollowers().contains(userId)) {
               for(Post post: seller.getListPost()) {
-                  PostResponseDto postDto = objectMapper.convertValue(post, PostResponseDto.class);
+                  PostResponseDTO postDto = objectMapper.convertValue(post, PostResponseDTO.class);
                   posts.add(postDto);
               }
           }
       }
-      posts.sort(Comparator.comparing(PostResponseDto::getDate));
+      posts.sort(Comparator.comparing(PostResponseDTO::getDate));
       return posts;
   }
 
     @Override
-    public List<PostResponseDto> sortGetPostFromFollower(int userId, String order) {
-        List<PostResponseDto> ListPostDTO= getPostsFromFollower(userId);
+    public List<PostResponseDTO> sortGetPostFromFollower(int userId, String order) {
+        List<PostResponseDTO> ListPostDTO= getPostsFromFollower(userId);
         if (order.contains("date_asc")) {
-            ListPostDTO.sort(Comparator.comparing(PostResponseDto::getDate));
+            ListPostDTO.sort(Comparator.comparing(PostResponseDTO::getDate));
         } else if (order.contains("date_desc")) {
-                     ListPostDTO.sort(Comparator.comparing(PostResponseDto::getDate).reversed());
+                     ListPostDTO.sort(Comparator.comparing(PostResponseDTO::getDate).reversed());
         }
         else {throw new BadRequestException();}
         return ListPostDTO;
     }
 
     @Override
-    public boolean createNewPost(PostRequestDto post){
+    public boolean createNewPost(PostRequestDTO post){
         Optional<Seller> optionalSeller = sellerRepository.findById(post.getUserId());
         if (optionalSeller.isEmpty()){
             throw new BadRequestException();

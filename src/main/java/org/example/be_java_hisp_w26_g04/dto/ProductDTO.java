@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductDto {
+public class ProductDTO {
     @JsonProperty("product_id")
     private int productId;
     @JsonProperty("product_name")

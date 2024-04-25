@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostResponseDto {
+public class PostResponseDTO {
     @JsonProperty("post_id")
     @JsonAlias("idPost")
     private int idPost;

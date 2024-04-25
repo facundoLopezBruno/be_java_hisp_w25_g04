@@ -1,4 +1,4 @@
-package org.example.be_java_hisp_w26_g04.util.CRUD;
+package org.example.be_java_hisp_w26_g04.util.crud;
 
 import java.util.Optional;
 import java.util.Set;
