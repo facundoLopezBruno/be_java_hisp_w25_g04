@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -53,6 +55,15 @@ public class SellersRepositoryImp implements ISellerRepository {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<Post> getPosts() {
+        List<Post> posts = new ArrayList<>();
+        sellers.stream().forEach(x ->
+                x.getListPost().forEach(p -> posts.add(p))
+        );
+        return posts;
     }
 
     private void populate() throws IOException {

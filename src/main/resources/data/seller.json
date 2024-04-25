@@ -5,7 +5,7 @@
     {
       "idPost": 1,
       "userId": 123,
-      "date": "2024-04-23",
+      "date": "2022-04-23",
       "category": 1,
       "price": 50.0,
       "product": {
@@ -30,6 +30,21 @@
         "brand": "BrandY",
         "color": "Red",
         "notes": "Some notes about Product2"
+      }
+    },
+    {
+      "idPost": 3,
+      "userId": 123,
+      "date": "2024-04-23",
+      "category": 1,
+      "price": 50.0,
+      "product": {
+        "productId": 1,
+        "productName": "Product1",
+        "typeProduct": "TypeA",
+        "brand": "BrandX",
+        "color": "Blue",
+        "notes": "Some notes about Product1"
       }
     }
   ],
