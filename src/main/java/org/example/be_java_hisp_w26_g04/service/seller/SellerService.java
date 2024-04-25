@@ -2,7 +2,6 @@ package org.example.be_java_hisp_w26_g04.service.seller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,14 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostRequestDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
-import org.example.be_java_hisp_w26_g04.dto.ProductDTO;
 import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
 import org.example.be_java_hisp_w26_g04.dto.UserDTO;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.exceptions.NotFoundException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
-import org.example.be_java_hisp_w26_g04.model.Product;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
@@ -59,14 +56,22 @@ public class SellerService implements ISellerService {
   @Override
   public SellerFollowersDTO sortGetFollowers(int userId, String order) {
     SellerFollowersDTO sellerFollowersDTO = getFollowers(userId);
-    if (order.equals("name_asc")) {
-      sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDTO::getUsername));
-    } else if (order.equals("name_desc")) {
-      sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDTO::getUsername).reversed());
+    List<UserDTO> res = sellerFollowersDTO.getFollowers();
 
+    if (order.equals("name_asc")) {
+      res = sellerFollowersDTO.getFollowers().stream()
+          .sorted(Comparator.comparing(UserDTO::getUsername)).toList();
+      //       sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDTO::getUsername));
+    } else if (order.equals("name_desc")) {
+      //      sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDTO::getUsername).reversed());
+      res = sellerFollowersDTO.getFollowers().stream()
+          .sorted(Comparator.comparing(UserDTO::getUsername).reversed())
+          .toList();
     } else {
       throw new BadRequestException();
     }
+
+    sellerFollowersDTO.setFollowers(res);
     return sellerFollowersDTO;
   }
 
