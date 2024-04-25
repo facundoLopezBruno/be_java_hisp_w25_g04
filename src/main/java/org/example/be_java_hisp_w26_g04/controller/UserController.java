@@ -8,11 +8,7 @@ import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -30,9 +26,14 @@ public class UserController {
     return ResponseEntity.ok().build();
   }
 
+
   @GetMapping("/{userId}/followers/list")
-  public ResponseEntity<SellerFollowersDTO> getFollowers(@PathVariable int userId) {
-    return ResponseEntity.ok().body(sellerService.getFollowers(userId));
+  public ResponseEntity<SellerFollowersDTO> sortFollowers(@RequestParam(required = false) String order, @PathVariable int userId) {
+    if (order != null) {
+      return ResponseEntity.ok().body(sellerService.sortGetFollowers(userId, order));
+    } else{
+        return ResponseEntity.ok().body(sellerService.getFollowers(userId));
+    }
   }
 
   @GetMapping("/{userId}/followers/count")
@@ -40,11 +41,14 @@ public class UserController {
     return ResponseEntity.ok(sellerService.findFollowers(userId));
   }
 
-  @GetMapping("/{userId}/followed/list")
-  public ResponseEntity<?> getSellerList(@PathVariable int userId) {
-    BuyerDTO buyer = buyerService.getById(userId);
-      return new ResponseEntity<>(buyer, HttpStatus.OK);
 
+  @GetMapping("/{userId}/followed/list")
+  public ResponseEntity<BuyerDTO> sortFollowed(@RequestParam(required = false) String order, @PathVariable int userId) {
+    if (order != null) {
+      return ResponseEntity.ok(buyerService.sortGetFollowed(userId, order));
+    }else{
+      return ResponseEntity.ok(buyerService.getFollowed(userId));
+    }
   }
 
   @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class BuyerService implements IBuyerService {
     }
 
     @Override
-    public BuyerDTO getById(int id) {
+    public BuyerDTO getFollowed(int id) {
 
         if(buyersRepository.findById(id).isEmpty())
             throw new NotFoundException("No existe el id: "+id);
@@ -60,5 +61,19 @@ public class BuyerService implements IBuyerService {
 
         buyer.get().getSellersFollowing().remove(seller.get().getUserId());
         seller.get().getFollowers().remove(buyer.get().getUserId());
+    }
+
+    @Override
+    public BuyerDTO sortGetFollowed(int userId, String order) {
+        BuyerDTO buyerDTO= getFollowed(userId);
+        if(order.equals("name_asc")){
+            buyerDTO.getFollowed().sort(Comparator.comparing(UserDto::getUsername));
+        } else if (order.equals("name_desc")) {
+            buyerDTO.getFollowed().sort(Comparator.comparing(UserDto::getUsername).reversed());
+        }
+        else{
+            throw new BadRequestException();
+        }
+        return buyerDTO;
     }
 }

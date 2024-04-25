@@ -2,11 +2,11 @@
   {
     "userId": 456,
     "userName": "JaneDoe",
-    "sellersFollowing": []
+    "sellersFollowing": [123]
   },
   {
     "userId": 789,
     "userName": "AliceSmith",
-    "sellersFollowing": []
+    "sellersFollowing": [123]
   }
 ]

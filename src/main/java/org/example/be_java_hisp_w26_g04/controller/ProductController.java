@@ -1,11 +1,14 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
 import org.example.be_java_hisp_w26_g04.dto.PostRequestDto;
+import org.example.be_java_hisp_w26_g04.dto.PostResponseDto;
 import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -23,7 +26,15 @@ public class ProductController {
     }
 
     @GetMapping("/followed/{userId}/list")
-    public ResponseEntity<?> getPostsFromFollower(@PathVariable int userId) {
-        return ResponseEntity.ok().body(sellerService.getPostsFromFollower(userId));
+    public ResponseEntity<List<PostResponseDto>> getPostsFromFollower(
+            @PathVariable int userId,
+            @RequestParam(required = false, value = "order") String order
+    ) {
+        if (order != null) {
+            return ResponseEntity.ok().body(sellerService.sortGetPostFromFollower(userId, order));
+        } else {
+            return ResponseEntity.ok().body(sellerService.getPostsFromFollower(userId));
+        }
     }
+
 }
