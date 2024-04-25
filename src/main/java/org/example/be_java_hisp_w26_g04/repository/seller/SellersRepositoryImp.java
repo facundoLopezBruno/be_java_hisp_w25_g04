@@ -50,18 +50,24 @@ public class SellersRepositoryImp implements ISellerRepository {
                 .findFirst();
 
         if (optionalSeller.isPresent()) {
+            int maxPostId = optionalSeller.get().getListPost().stream()
+                    .mapToInt(Post::getIdPost)
+                    .max()
+                    .orElse(0);
+
+            post.setIdPost(++maxPostId);
+
             optionalSeller.get().getListPost().add(post);
-            return true;
-        } else {
-            return false;
         }
+
+        return optionalSeller.isPresent();
     }
 
     @Override
     public List<Post> getPosts() {
         List<Post> posts = new ArrayList<>();
-        sellers.stream().forEach(x ->
-                x.getListPost().forEach(p -> posts.add(p))
+        sellers.forEach(x ->
+                posts.addAll(x.getListPost())
         );
         return posts;
     }

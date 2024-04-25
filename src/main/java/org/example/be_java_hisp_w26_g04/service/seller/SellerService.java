@@ -124,30 +124,9 @@ public class SellerService implements ISellerService {
       throw new BadRequestException();
     }
 
-    Post unPost = convertPostRequestDtoToPost(post);
+    Post unPost = objectMapper.convertValue(post, Post.class);
 
     return sellerRepository.save(unPost);
-  }
-
-  public Post convertPostRequestDtoToPost(PostRequestDTO postRequestDTO) {
-    return Post.builder()
-        .userId(postRequestDTO.getUserId())
-        .date(LocalDate.parse(postRequestDTO.getDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-        .category(postRequestDTO.getCategory())
-        .price(postRequestDTO.getPrice())
-        .product(convertProductDtoToProduct(postRequestDTO.getProduct()))
-        .build();
-  }
-
-  public Product convertProductDtoToProduct(ProductDTO productDTO) {
-    return Product.builder()
-        .productId(productDTO.getProductId())
-        .productName(productDTO.getProductName())
-        .typeProduct(productDTO.getTypeProduct())
-        .brand(productDTO.getBrand())
-        .color(productDTO.getColor())
-        .notes(productDTO.getNotes())
-        .build();
   }
 
 }

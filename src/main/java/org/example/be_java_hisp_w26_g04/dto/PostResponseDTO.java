@@ -1,6 +1,7 @@
 package org.example.be_java_hisp_w26_g04.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class PostResponseDTO {
     @JsonProperty("user_id")
     @JsonAlias("userId")
     private int userId;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     @JsonProperty("date")
     private LocalDate date;
     @JsonProperty("category")
