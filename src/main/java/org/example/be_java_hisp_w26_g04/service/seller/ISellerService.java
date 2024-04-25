@@ -16,7 +16,5 @@ public interface ISellerService {
 
   boolean createNewPost(PostRequestDTO post);
 
-  List<PostResponseDTO> getPostsFromFollower(int userId);
-
   List<PostResponseDTO> sortGetPostFromFollower(int userId, String order);
 }

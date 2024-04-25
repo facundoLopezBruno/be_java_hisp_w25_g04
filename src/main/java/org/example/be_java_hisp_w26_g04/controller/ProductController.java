@@ -29,11 +29,8 @@ public class ProductController {
             @PathVariable int userId,
             @RequestParam(required = false, value = "order") String order
     ) {
-        if (order != null) {
-            return ResponseEntity.ok().body(sellerService.sortGetPostFromFollower(userId, order));
-        } else {
-            return ResponseEntity.ok().body(sellerService.getPostsFromFollower(userId));
-        }
+        return ResponseEntity.ok().body(sellerService.sortGetPostFromFollower(userId, order));
+
     }
 
 }
