@@ -38,11 +38,21 @@ public class SellersRepositoryImp implements ISellerRepository {
     }
 
     @Override
-    public boolean save(Seller seller) {
+    public int save(Seller seller) {
         idCounter++;
         seller.setUserId(idCounter);
-        return sellers.add(seller);
+        sellers.add(seller);
+        return idCounter;
     }
+
+    @Override
+    public int update(Seller Object) {
+        return 0;
+    }
+
+    @Override
+    public void delete(Seller Object) {}
+
     @Override
     public boolean save(Post post){
         Optional<Seller> optionalSeller = sellers.stream()

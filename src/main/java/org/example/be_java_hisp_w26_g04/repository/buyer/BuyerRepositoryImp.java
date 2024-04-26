@@ -17,6 +17,14 @@ public class BuyerRepositoryImp implements IBuyersRepository {
     private Set<Buyer> buyers;
     private int idCount;
 
+    @Override
+    public int update(Buyer Object) {
+        return 0;
+    }
+
+    @Override
+    public void delete(Buyer Object) {}
+
     public BuyerRepositoryImp() throws IOException {
         populate();
     }
@@ -33,10 +41,11 @@ public class BuyerRepositoryImp implements IBuyersRepository {
     }
 
     @Override
-    public boolean save(Buyer buyer) {
+    public int save(Buyer buyer) {
         idCount++;
         buyer.setUserId(idCount);
-        return buyers.add(buyer);
+        buyers.add(buyer);
+        return idCount;
     }
 
     private void populate() throws IOException {
