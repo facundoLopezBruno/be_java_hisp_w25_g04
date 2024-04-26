@@ -77,14 +77,13 @@ public class SellerService implements ISellerService {
     }
 
     private SellerFollowersDTO converSellerToSellerFollowersDto(Seller seller) {
-        List<UserDTO> followers = seller.getFollowers().stream()
-                .map(x -> buyerRepository.findById(x)).filter(Optional::isPresent).map(x -> x.get())
+        List<Buyer> buyers = seller.getFollowers().stream()
+                .map(x -> buyerRepository.findById(x)).filter(Optional::isPresent).map(x -> x.get()).toList();
+        List<UserDTO> followers = buyers.stream()
                 .map(follower -> new UserDTO(follower.getUserId(), follower.getUserName()))
                 .toList();
-
         return new SellerFollowersDTO(seller.getUserId(), seller.getUserName(), followers);
     }
-
 
     private List<PostResponseDTO> getPostsFromFollower(int userId) {
         Buyer buyer = ObjectExist.getObjectFromOptional(buyerRepository.findById(userId));

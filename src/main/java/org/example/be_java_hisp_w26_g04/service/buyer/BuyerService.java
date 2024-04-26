@@ -39,8 +39,8 @@ public class BuyerService implements IBuyerService {
     public BuyerDTO getFollowed(int id) {
         Buyer buyer= ObjectExist.getObjectFromOptional(buyersRepository.findById(id));
         List<Seller> sellerList = buyer.getSellersFollowing().stream()
-        .map(x -> sellerRepository.findById(x)).filter(Optional::isPresent)
-                .map(Optional::get).toList();
+        .map(x -> sellerRepository.findById(x)).filter(Optional::isPresent) //devuelve lista opcionales
+                .map(Optional::get).toList(); //transforma lista a sellers
         List<UserDTO> userDtoList= new ArrayList<>();
         for(Seller seller: sellerList){
             userDtoList.add(new UserDTO(seller.getUserId(), seller.getUserName() ));
