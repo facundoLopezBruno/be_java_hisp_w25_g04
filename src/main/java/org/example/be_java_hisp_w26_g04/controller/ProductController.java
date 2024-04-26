@@ -29,17 +29,12 @@ public class ProductController {
             @RequestParam(required = false, value = "order") String order
     ) {
         return ResponseEntity.ok().body(sellerService.sortGetPostFromFollower(userId, order));
-
     }
 
     @PostMapping("promo-post")
     public ResponseEntity<?> createPromoPost(@RequestBody PromoPostRequestDTO promoPostRequestDto){
-        try{
             sellerService.createPromoPost(promoPostRequestDto);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @GetMapping("/promo-post/count")
