@@ -2,6 +2,8 @@ package org.example.be_java_hisp_w26_g04.controller;
 
 import org.example.be_java_hisp_w26_g04.dto.PostRequestDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
+import org.example.be_java_hisp_w26_g04.dto.PromoPostRequestDTO;
+import org.example.be_java_hisp_w26_g04.dto.PromoProductsCountDTO;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,21 @@ public class ProductController {
     ) {
         return ResponseEntity.ok().body(sellerService.sortGetPostFromFollower(userId, order));
 
+    }
+
+    @PostMapping("promo-post")
+    public ResponseEntity<?> createPromoPost(@RequestBody PromoPostRequestDTO promoPostRequestDto){
+        try{
+            sellerService.createPromoPost(promoPostRequestDto);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/promo-post/count")
+    public ResponseEntity<PromoProductsCountDTO> getPromoProducts(@RequestParam("user_id") int userId) {
+        return ResponseEntity.ok(sellerService.getPromoProductsCount(userId));
     }
 
 }
