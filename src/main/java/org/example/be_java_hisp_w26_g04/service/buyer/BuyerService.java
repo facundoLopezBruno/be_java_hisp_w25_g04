@@ -1,9 +1,9 @@
 package org.example.be_java_hisp_w26_g04.service.buyer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
 import org.example.be_java_hisp_w26_g04.dto.UserDTO;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
-import org.example.be_java_hisp_w26_g04.exceptions.NotFoundException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
@@ -25,6 +25,9 @@ public class BuyerService implements IBuyerService {
     @Autowired
     ISellerRepository sellerRepository;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @Override
     public void followSeller(int buyerId, int sellerId) {
         Buyer buyer= ObjectExist.getObjectFromOptional(buyersRepository.findById(buyerId));
@@ -39,11 +42,13 @@ public class BuyerService implements IBuyerService {
     public BuyerDTO getFollowed(int id) {
         Buyer buyer= ObjectExist.getObjectFromOptional(buyersRepository.findById(id));
         List<Seller> sellerList = buyer.getSellersFollowing().stream()
-        .map(x -> sellerRepository.findById(x)).filter(Optional::isPresent) //devuelve lista opcionales
-                .map(Optional::get).toList(); //transforma lista a sellers
+        .map(x -> sellerRepository.findById(x))
+                .filter(Optional::isPresent) //devuelve lista opcionales
+                .map(Optional::get)
+                .toList(); //transforma lista a sellers
         List<UserDTO> userDtoList= new ArrayList<>();
         for(Seller seller: sellerList){
-            userDtoList.add(new UserDTO(seller.getUserId(), seller.getUserName() ));
+            userDtoList.add(objectMapper.convertValue(seller, UserDTO.class));
         }
 
         return new BuyerDTO(buyer.getUserId(), buyer.getUserName(), userDtoList);

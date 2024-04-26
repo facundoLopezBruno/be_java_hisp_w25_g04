@@ -35,7 +35,8 @@ public class SellerService implements ISellerService {
     @Autowired
     IBuyersRepository buyerRepository;
 
-    private final ObjectMapper objectMapper;
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Override
     public FollowersCountDTO findFollowers(int sellerId) {
@@ -78,9 +79,12 @@ public class SellerService implements ISellerService {
 
     private SellerFollowersDTO converSellerToSellerFollowersDto(Seller seller) {
         List<Buyer> buyers = seller.getFollowers().stream()
-                .map(x -> buyerRepository.findById(x)).filter(Optional::isPresent).map(x -> x.get()).toList();
+                .map(x -> buyerRepository.findById(x))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
         List<UserDTO> followers = buyers.stream()
-                .map(follower -> new UserDTO(follower.getUserId(), follower.getUserName()))
+                .map(follower -> objectMapper.convertValue(follower, UserDTO.class))
                 .toList();
         return new SellerFollowersDTO(seller.getUserId(), seller.getUserName(), followers);
     }

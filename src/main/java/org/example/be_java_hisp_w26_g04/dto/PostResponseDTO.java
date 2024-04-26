@@ -29,5 +29,5 @@ public class PostResponseDTO {
     @JsonProperty("price")
     private double price;
     @JsonProperty("product")
-    Product product;
+    private ProductDTO product;
 }
