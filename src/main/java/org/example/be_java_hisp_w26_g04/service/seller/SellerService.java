@@ -9,11 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
-import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
-import org.example.be_java_hisp_w26_g04.dto.PostRequestDTO;
-import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
-import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
-import org.example.be_java_hisp_w26_g04.dto.UserDTO;
+import org.example.be_java_hisp_w26_g04.dto.*;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
@@ -144,5 +140,18 @@ public class SellerService implements ISellerService {
 
         post.setIdPost(++maxPostId);
         seller.getListPost().add(post);
+    }
+
+    @Override
+    public PromoCountResponseDTO getPromoCount(int sellerId) {
+        Seller seller = ObjectExist.getObjectFromOptional(sellerRepository.findById(sellerId));
+        long promoProductsCount = seller.getListPost().stream()
+                .filter(Post::isHasPromo)
+                .count();
+
+        PromoCountResponseDTO promoCountResponseDTO = objectMapper.convertValue(seller, PromoCountResponseDTO.class);
+        promoCountResponseDTO.setPromoProductsCount((int) promoProductsCount);
+
+        return promoCountResponseDTO;
     }
 }

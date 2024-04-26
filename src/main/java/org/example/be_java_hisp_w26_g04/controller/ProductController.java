@@ -1,5 +1,6 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
+import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostRequestDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
@@ -27,7 +28,16 @@ public class ProductController {
             @RequestParam(required = false, value = "order") String order
     ) {
         return ResponseEntity.ok().body(sellerService.sortGetPostFromFollower(userId, order));
-
     }
 
+    @PostMapping("/promo-post")
+    public ResponseEntity<?> createPromoPost(@RequestBody PostRequestDTO post){
+        sellerService.createNewPost(post);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/promo-post/count")
+    public ResponseEntity<?> getPromoCount(@RequestParam("user_id") int userId) {
+        return ResponseEntity.ok(sellerService.getPromoCount(userId));
+    }
 }

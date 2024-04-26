@@ -30,4 +30,9 @@ public class PostResponseDTO {
     private double price;
     @JsonProperty("product")
     private ProductDTO product;
+    @JsonProperty("has_promo")
+    @JsonAlias("hasPromo")
+    private boolean hasPromo;
+    @JsonProperty("discount")
+    private double discount;
 }

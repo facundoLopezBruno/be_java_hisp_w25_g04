@@ -19,4 +19,7 @@ public class Post {
     Product product;
     private int category;
     private double price;
+    @JsonAlias({"has_promo","hasPromo"})
+    private boolean hasPromo;
+    private double discount;
 }
