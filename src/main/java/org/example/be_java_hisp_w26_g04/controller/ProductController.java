@@ -17,11 +17,8 @@ public class ProductController {
 
     @PostMapping("/post")
     public ResponseEntity<?> createPost(@RequestBody PostRequestDTO post){
-        if(sellerService.createNewPost(post)){
-            return ResponseEntity.ok().build();
-        } else{
-           return ResponseEntity.badRequest().build();
-        }
+        sellerService.createNewPost(post);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/followed/{userId}/list")

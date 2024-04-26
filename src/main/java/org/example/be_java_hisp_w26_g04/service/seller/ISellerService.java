@@ -14,7 +14,7 @@ public interface ISellerService {
 
   FollowersCountDTO findFollowers(int sellerId);
 
-  boolean createNewPost(PostRequestDTO post);
+  void createNewPost(PostRequestDTO post);
 
   List<PostResponseDTO> sortGetPostFromFollower(int userId, String order);
 }

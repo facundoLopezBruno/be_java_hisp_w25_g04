@@ -122,13 +122,22 @@ public class SellerService implements ISellerService {
     }
 
     @Override
-    public boolean createNewPost(PostRequestDTO post) {
+    public void createNewPost(PostRequestDTO post) {
         ObjectExist.getObjectFromOptional(sellerRepository.findById(post.getUserId()));
         // lanza error si no esxite el seller
 
         Post unPost = objectMapper.convertValue(post, Post.class);
-
-        return sellerRepository.save(unPost);
+        addPost(unPost);
     }
 
+    private void addPost(Post post) {
+        Seller seller = ObjectExist.getObjectFromOptional(sellerRepository.findById(post.getUserId()));
+        int maxPostId = seller.getListPost().stream()
+                .mapToInt(Post::getIdPost)
+                .max()
+                .orElse(0);
+
+        post.setIdPost(++maxPostId);
+        seller.getListPost().add(post);
+    }
 }

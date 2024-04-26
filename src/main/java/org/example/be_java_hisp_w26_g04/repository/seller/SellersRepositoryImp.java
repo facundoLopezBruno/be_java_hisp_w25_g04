@@ -54,26 +54,6 @@ public class SellersRepositoryImp implements ISellerRepository {
     public void delete(Seller Object) {}
 
     @Override
-    public boolean save(Post post){
-        Optional<Seller> optionalSeller = sellers.stream()
-                .filter(x -> x.getUserId() == post.getUserId())
-                .findFirst();
-
-        if (optionalSeller.isPresent()) {
-            int maxPostId = optionalSeller.get().getListPost().stream()
-                    .mapToInt(Post::getIdPost)
-                    .max()
-                    .orElse(0);
-
-            post.setIdPost(++maxPostId);
-
-            optionalSeller.get().getListPost().add(post);
-        }
-
-        return optionalSeller.isPresent();
-    }
-
-    @Override
     public List<Post> getPosts() {
         List<Post> posts = new ArrayList<>();
         sellers.forEach(x ->
