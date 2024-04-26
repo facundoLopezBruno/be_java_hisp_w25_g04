@@ -8,6 +8,7 @@ import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
+import org.example.be_java_hisp_w26_g04.util.crud.exceptionsHandler.ObjectExist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,8 @@ public class BuyerService implements IBuyerService {
 
     @Override
     public void followSeller(int buyerId, int sellerId) {
-        Buyer buyer = buyersRepository.findById(buyerId).orElseThrow(BadRequestException::new);
-        Seller seller = sellerRepository.findById(sellerId).orElseThrow(BadRequestException::new);
+        Buyer buyer= ObjectExist.getObjectFromOptional(buyersRepository.findById(buyerId));
+        Seller seller= ObjectExist.getObjectFromOptional(sellerRepository.findById(sellerId));
 
         if (!buyer.addFollow(seller) || !seller.addFollower(buyer)) {
             throw new BadRequestException();
@@ -36,10 +37,7 @@ public class BuyerService implements IBuyerService {
 
     @Override
     public BuyerDTO getFollowed(int id) {
-
-        if(buyersRepository.findById(id).isEmpty())
-            throw new NotFoundException("No existe el id: "+id);
-        Buyer buyer=buyersRepository.findById(id).get();
+        Buyer buyer= ObjectExist.getObjectFromOptional(buyersRepository.findById(id));
         List<Seller> sellerList = buyer.getSellersFollowing().stream()
         .map(x -> sellerRepository.findById(x)).filter(Optional::isPresent)
                 .map(Optional::get).toList();
@@ -53,14 +51,11 @@ public class BuyerService implements IBuyerService {
 
     @Override
     public void unfollowerSeller(int userId, int userIdToUnfollow) {
-        Optional<Buyer> buyer = buyersRepository.findById(userId);
-        if (buyer.isEmpty()) throw new BadRequestException();
+        Buyer buyer= ObjectExist.getObjectFromOptional(buyersRepository.findById(userId));
+        Seller seller = ObjectExist.getObjectFromOptional(sellerRepository.findById(userIdToUnfollow));
 
-        Optional<Seller> seller = sellerRepository.findById(userIdToUnfollow);
-        if (seller.isEmpty()) throw new BadRequestException();
-
-        buyer.get().getSellersFollowing().remove(seller.get().getUserId());
-        seller.get().getFollowers().remove(buyer.get().getUserId());
+        buyer.getSellersFollowing().remove(seller.getUserId());
+        seller.getFollowers().remove(buyer.getUserId());
     }
 
     @Override
