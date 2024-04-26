@@ -15,7 +15,6 @@ import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
 import org.example.be_java_hisp_w26_g04.dto.UserDTO;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
-import org.example.be_java_hisp_w26_g04.exceptions.NotFoundException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
@@ -62,12 +61,10 @@ public class SellerService implements ISellerService {
 
         if (order.equals("name_asc")) {
             res = sellerFollowersDTO.getFollowers().stream()
-                    .sorted(Comparator.comparing(UserDTO::getUsername)).toList();
-            //       sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDTO::getUsername));
+                    .sorted(Comparator.comparing(UserDTO::getUserName)).toList();
         } else if (order.equals("name_desc")) {
-            //      sellerFollowersDTO.getFollowers().sort(Comparator.comparing(UserDTO::getUsername).reversed());
             res = sellerFollowersDTO.getFollowers().stream()
-                    .sorted(Comparator.comparing(UserDTO::getUsername).reversed())
+                    .sorted(Comparator.comparing(UserDTO::getUserName).reversed())
                     .toList();
         } else {
             throw new BadRequestException();
@@ -77,12 +74,16 @@ public class SellerService implements ISellerService {
         return sellerFollowersDTO;
     }
 
-    private SellerFollowersDTO converSellerToSellerFollowersDto(Seller seller) {
-        List<Buyer> buyers = seller.getFollowers().stream()
+    private List<Buyer> getBuyersFromSeller(Seller seller){
+        return seller.getFollowers().stream()
                 .map(x -> buyerRepository.findById(x))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
+    }
+
+    private SellerFollowersDTO converSellerToSellerFollowersDto(Seller seller) {
+        List<Buyer> buyers = getBuyersFromSeller(seller);
         List<UserDTO> followers = buyers.stream()
                 .map(follower -> objectMapper.convertValue(follower, UserDTO.class))
                 .toList();

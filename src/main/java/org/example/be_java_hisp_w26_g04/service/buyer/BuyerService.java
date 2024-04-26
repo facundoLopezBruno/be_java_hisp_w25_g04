@@ -38,14 +38,18 @@ public class BuyerService implements IBuyerService {
         }
     }
 
-    @Override
-    public BuyerDTO getFollowed(int id) {
-        Buyer buyer= ObjectExist.getObjectFromOptional(buyersRepository.findById(id));
-        List<Seller> sellerList = buyer.getSellersFollowing().stream()
-        .map(x -> sellerRepository.findById(x))
+    private List<Seller> getSellersFromBuyer(Buyer buyer){
+        return buyer.getSellersFollowing().stream()
+                .map(x -> sellerRepository.findById(x))
                 .filter(Optional::isPresent) //devuelve lista opcionales
                 .map(Optional::get)
                 .toList(); //transforma lista a sellers
+    }
+
+    @Override
+    public BuyerDTO getFollowed(int id) {
+        Buyer buyer= ObjectExist.getObjectFromOptional(buyersRepository.findById(id));
+        List<Seller> sellerList = getSellersFromBuyer(buyer);
         List<UserDTO> userDtoList= new ArrayList<>();
         for(Seller seller: sellerList){
             userDtoList.add(objectMapper.convertValue(seller, UserDTO.class));
@@ -67,9 +71,9 @@ public class BuyerService implements IBuyerService {
     public BuyerDTO sortGetFollowed(int userId, String order) {
         BuyerDTO buyerDTO= getFollowed(userId);
         if(order.equals("name_asc")){
-            buyerDTO.getFollowed().sort(Comparator.comparing(UserDTO::getUsername));
+            buyerDTO.getFollowed().sort(Comparator.comparing(UserDTO::getUserName));
         } else if (order.equals("name_desc")) {
-            buyerDTO.getFollowed().sort(Comparator.comparing(UserDTO::getUsername).reversed());
+            buyerDTO.getFollowed().sort(Comparator.comparing(UserDTO::getUserName).reversed());
         }
         else{
             throw new BadRequestException();
