@@ -1,10 +1,13 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.example.be_java_hisp_w26_g04.dto.PostRequestDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +19,7 @@ public class ProductController {
     ISellerService sellerService;
 
     @PostMapping("/post")
-    public ResponseEntity<?> createPost(@RequestBody PostRequestDTO post){
+    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequestDTO post){
         sellerService.createNewPost(post);
         return ResponseEntity.ok().build();
     }
