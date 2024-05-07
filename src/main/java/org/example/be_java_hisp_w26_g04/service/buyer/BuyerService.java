@@ -24,7 +24,6 @@ public class BuyerService implements IBuyerService {
     IBuyersRepository buyersRepository;
     @Autowired
     ISellerRepository sellerRepository;
-
     @Autowired
     ObjectMapper objectMapper;
 
