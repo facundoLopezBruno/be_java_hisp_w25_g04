@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
+import org.example.be_java_hisp_w26_g04.dto.ProductDTO;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.springframework.core.io.ClassPathResource;
@@ -12,6 +14,9 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class UtilTest {
@@ -35,4 +40,63 @@ public class UtilTest {
         return objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
         });
     }
+
+    public static List<PostResponseDTO> generatePostResponseDTOAsc(){
+
+        List<PostResponseDTO> postResponseDTOList = new ArrayList<>();
+        ProductDTO productDTO1= new ProductDTO();
+        productDTO1.setProductId(2);
+        productDTO1.setProductName("Product2");
+        productDTO1.setTypeProduct("TypeB");
+        productDTO1.setBrand("BrandY");
+        productDTO1.setColor("Red");
+        productDTO1.setNotes("Some notes about Product2");
+
+        ProductDTO productDTO2= new ProductDTO();
+        productDTO2.setProductId(4);
+        productDTO2.setProductName("Product4");
+        productDTO2.setTypeProduct("TypeD");
+        productDTO2.setBrand("BrandW");
+        productDTO2.setColor("Yellow");
+        productDTO2.setNotes("Some notes about Product4");
+
+        PostResponseDTO post1=new PostResponseDTO(2, 123, LocalDate.of(2024, 4, 24) , 2, 75.0, productDTO1);
+        PostResponseDTO post2= new PostResponseDTO(5, 234, LocalDate.of(2024, 5, 28) , 2, 65.0, productDTO2);
+
+        postResponseDTOList.add(post1);
+        postResponseDTOList.add(post2);
+
+        return postResponseDTOList;
+
+    }
+
+    public static List<PostResponseDTO> generatePostResponseDTODesc() {
+
+        List<PostResponseDTO> postResponseDTOList = new ArrayList<>();
+        ProductDTO productDTO1 = new ProductDTO();
+        productDTO1.setProductId(2);
+        productDTO1.setProductName("Product2");
+        productDTO1.setTypeProduct("TypeB");
+        productDTO1.setBrand("BrandY");
+        productDTO1.setColor("Red");
+        productDTO1.setNotes("Some notes about Product2");
+
+        ProductDTO productDTO2 = new ProductDTO();
+        productDTO2.setProductId(4);
+        productDTO2.setProductName("Product4");
+        productDTO2.setTypeProduct("TypeD");
+        productDTO2.setBrand("BrandW");
+        productDTO2.setColor("Yellow");
+        productDTO2.setNotes("Some notes about Product4");
+
+        PostResponseDTO post1 = new PostResponseDTO(2, 123, LocalDate.of(2024, 4, 24), 2, 75.0, productDTO1);
+        PostResponseDTO post2 = new PostResponseDTO(5, 234, LocalDate.of(2024, 5, 28), 2, 65.0, productDTO2);
+
+        postResponseDTOList.add(post2);
+        postResponseDTOList.add(post1);
+
+        return postResponseDTOList;
+    }
+
+
 }

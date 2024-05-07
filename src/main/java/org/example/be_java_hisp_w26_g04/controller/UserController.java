@@ -8,10 +8,12 @@ import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
+@Validated
 public class UserController {
 
   @Autowired

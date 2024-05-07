@@ -1,7 +1,6 @@
 package org.example.be_java_hisp_w26_g04.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.example.be_java_hisp_w26_g04.dto.PostRequestDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.service.seller.ISellerService;
@@ -14,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@Validated
 public class ProductController {
     @Autowired
     ISellerService sellerService;

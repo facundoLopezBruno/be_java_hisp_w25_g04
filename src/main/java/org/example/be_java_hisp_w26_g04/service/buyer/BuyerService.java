@@ -9,6 +9,7 @@ import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.example.be_java_hisp_w26_g04.util.crud.exceptionsHandler.ObjectExist;
+import org.example.be_java_hisp_w26_g04.util.crud.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +25,7 @@ public class BuyerService implements IBuyerService {
     IBuyersRepository buyersRepository;
     @Autowired
     ISellerRepository sellerRepository;
-
-    @Autowired
-    ObjectMapper objectMapper;
+    
 
     @Override
     public void followSeller(int buyerId, int sellerId) {
@@ -52,7 +51,7 @@ public class BuyerService implements IBuyerService {
         List<Seller> sellerList = getSellersFromBuyer(buyer);
         List<UserDTO> userDtoList= new ArrayList<>();
         for(Seller seller: sellerList){
-            userDtoList.add(objectMapper.convertValue(seller, UserDTO.class));
+            userDtoList.add(CustomMapper.mapper(seller, UserDTO.class));
         }
 
         return new BuyerDTO(buyer.getUserId(), buyer.getUserName(), userDtoList);

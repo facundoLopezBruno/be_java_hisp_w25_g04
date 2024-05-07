@@ -22,6 +22,7 @@ import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.example.be_java_hisp_w26_g04.util.crud.exceptionsHandler.ObjectExist;
+import org.example.be_java_hisp_w26_g04.util.crud.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,15 +35,14 @@ public class SellerService implements ISellerService {
 
     @Autowired
     IBuyersRepository buyerRepository;
-
-    private ObjectMapper objectMapper = new ObjectMapper();
+    
 
     @Override
     public FollowersCountDTO findFollowers(int sellerId) {
         Seller seller = ObjectExist.getObjectFromOptional(sellerRepository.findById(sellerId));
         int followerCount = seller.getFollowers().size();
 
-        FollowersCountDTO followersCountDTO = objectMapper.convertValue(seller, FollowersCountDTO.class);
+        FollowersCountDTO followersCountDTO = CustomMapper.mapper(seller, FollowersCountDTO.class);
         followersCountDTO.setFollowersCount(followerCount);
 
         return followersCountDTO;
@@ -85,7 +85,7 @@ public class SellerService implements ISellerService {
     private SellerFollowersDTO converSellerToSellerFollowersDto(Seller seller) {
         List<Buyer> buyers = getBuyersFromSeller(seller);
         List<UserDTO> followers = buyers.stream()
-                .map(follower -> objectMapper.convertValue(follower, UserDTO.class))
+                .map(follower -> CustomMapper.mapper(follower, UserDTO.class))
                 .toList();
         return new SellerFollowersDTO(seller.getUserId(), seller.getUserName(), followers);
     }
@@ -99,7 +99,7 @@ public class SellerService implements ISellerService {
         buyer.getSellersFollowing().forEach(
                 id -> filteredPost.stream().filter(post -> post.getUserId() == id)
                         .forEach(
-                                x -> postsDTO.add(mapper.convertValue(x, PostResponseDTO.class))
+                                x -> postsDTO.add(CustomMapper.mapper(x, PostResponseDTO.class))
                         )
         );
         return postsDTO;
@@ -133,7 +133,7 @@ public class SellerService implements ISellerService {
         ObjectExist.getObjectFromOptional(sellerRepository.findById(post.getUserId()));
         // lanza error si no esxite el seller
 
-        Post unPost = objectMapper.convertValue(post, Post.class);
+        Post unPost = CustomMapper.mapper(post, Post.class);
         addPost(unPost);
     }
 
