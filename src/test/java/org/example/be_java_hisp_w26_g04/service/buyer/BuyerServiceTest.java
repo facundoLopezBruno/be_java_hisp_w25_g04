@@ -96,8 +96,10 @@ class BuyerServiceTest {
         buyer.getSellersFollowing().add(sellerId);
         seller.getFollowers().add(buyerId);
 
+        //Act
         buyerService.unfollowerSeller(buyerId,sellerId);
 
+        //Assert
         Assertions.assertFalse(buyer.getSellersFollowing().contains(sellerId));
         Assertions.assertFalse(seller.getFollowers().contains(buyerId));
     }
@@ -105,6 +107,7 @@ class BuyerServiceTest {
     @Test
     @DisplayName("T-0002 El usuario a dejar de seguir NO existe")
     void unfollowSeller_UserNotExistsTest(){
+        //Arrange
         int buyerId = 1;
         int sellerId = 999;
         Buyer buyer = new Buyer();
@@ -112,6 +115,7 @@ class BuyerServiceTest {
 
         when(buyersRepository.findById(buyerId)).thenThrow(new BadRequestException());
 
+        //Act & Assert
         Assertions.assertThrows(BadRequestException.class,
                                 () -> buyerService.unfollowerSeller(buyerId, sellerId));
     }
