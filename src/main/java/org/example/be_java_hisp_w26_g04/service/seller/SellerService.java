@@ -1,4 +1,5 @@
 package org.example.be_java_hisp_w26_g04.service.seller;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,8 +35,7 @@ public class SellerService implements ISellerService {
     @Autowired
     IBuyersRepository buyerRepository;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public FollowersCountDTO findFollowers(int sellerId) {
@@ -91,6 +91,7 @@ public class SellerService implements ISellerService {
     }
 
     private List<PostResponseDTO> getPostsFromFollower(int userId) {
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
         Buyer buyer = ObjectExist.getObjectFromOptional(buyerRepository.findById(userId));
         List<Post> posts = sellerRepository.getPosts();
         List<Post> filteredPost = filterPostsTwoWeeksAgo(posts);
@@ -98,7 +99,7 @@ public class SellerService implements ISellerService {
         buyer.getSellersFollowing().forEach(
                 id -> filteredPost.stream().filter(post -> post.getUserId() == id)
                         .forEach(
-                                x -> postsDTO.add(objectMapper.convertValue(x, PostResponseDTO.class))
+                                x -> postsDTO.add(mapper.convertValue(x, PostResponseDTO.class))
                         )
         );
         return postsDTO;
@@ -117,6 +118,7 @@ public class SellerService implements ISellerService {
         if (order != null) {
             if (order.contains("date_asc")) {
                 ListPostDTO.sort(Comparator.comparing(PostResponseDTO::getDate));
+                System.out.println(ListPostDTO);
             } else if (order.contains("date_desc")) {
                 ListPostDTO.sort(Comparator.comparing(PostResponseDTO::getDate).reversed());
             } else {
