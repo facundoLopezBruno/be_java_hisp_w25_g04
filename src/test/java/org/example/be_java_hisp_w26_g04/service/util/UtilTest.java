@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.dto.ProductDTO;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
@@ -97,6 +98,4 @@ public class UtilTest {
 
         return postResponseDTOList;
     }
-
-
 }

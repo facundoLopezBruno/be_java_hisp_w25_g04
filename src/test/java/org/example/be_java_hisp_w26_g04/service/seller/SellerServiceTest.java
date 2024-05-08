@@ -3,6 +3,7 @@ package org.example.be_java_hisp_w26_g04.service.seller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
@@ -125,5 +126,25 @@ class SellerServiceTest {
 
     @Test
     void createNewPost() {
+    }
+
+    @Test
+    @DisplayName("T-0007: Verificar que la cantidad de seguidores de un determinado usuario sea correcta.")
+    public void countFollowersTest() throws JsonProcessingException {
+        //Arrange
+        int sellerId = 123;
+        FollowersCountDTO expectedFollowersCountDTO = new FollowersCountDTO();
+        expectedFollowersCountDTO.setUserId(123);
+        expectedFollowersCountDTO.setUserName("JohnDoe");
+        expectedFollowersCountDTO.setFollowersCount(1);
+        ObjectMapper om = new ObjectMapper();
+        //Act
+        when(sellerRepository.findById(sellerId)).thenReturn(
+                sellers.stream().filter(b -> b.getUserId() == sellerId)
+                        .findFirst()
+        );
+        FollowersCountDTO resultFollowersCountDTO = service.findFollowers(sellerId);
+        //Assert
+        Assertions.assertEquals(om.writeValueAsString(expectedFollowersCountDTO), om.writeValueAsString(resultFollowersCountDTO));
     }
 }
