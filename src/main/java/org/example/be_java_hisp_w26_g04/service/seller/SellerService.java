@@ -90,9 +90,7 @@ public class SellerService implements ISellerService {
         List<UserDTO> followers = buyers.stream()
                 .map(follower -> CustomMapper.mapper(follower, UserDTO.class))
                 .toList();
-        SellerFollowersDTO dto = new SellerFollowersDTO(seller.getUserId(), seller.getUserName(), followers);
-        System.out.println(dto);
-        return dto;
+        return new SellerFollowersDTO(seller.getUserId(), seller.getUserName(), followers);
     }
 
     private List<PostResponseDTO> getPostsFromFollower(int userId) {

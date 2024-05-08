@@ -7,7 +7,7 @@ public enum OrderEnum {
     DATE_ASC("date_asc"),
     DATE_DESC("date_desc"),
     NAME_ASC("name_asc"),
-    NAME_DESC("name_asc");
+    NAME_DESC("name_desc");
 
     private final String order;
 
