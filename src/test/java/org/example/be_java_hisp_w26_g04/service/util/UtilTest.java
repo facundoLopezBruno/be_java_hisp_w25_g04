@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
@@ -40,95 +41,102 @@ public class UtilTest {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
         Resource resource = new ClassPathResource("data/seller.json");
+
         return objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
         });
     }
 
-
     public static List<PostResponseDTO> generatePostResponseDTOAsc() {
+        ProductDTO productDTO1 = getProduct2();
+        ProductDTO productDTO2 = getProduct4();
 
-        List<PostResponseDTO> postResponseDTOList = new ArrayList<>();
-        ProductDTO productDTO1 = new ProductDTO();
-        productDTO1.setProductId(2);
-        productDTO1.setProductName("Product2");
-        productDTO1.setTypeProduct("TypeB");
-        productDTO1.setBrand("BrandY");
-        productDTO1.setColor("Red");
-        productDTO1.setNotes("Some notes about Product2");
+        PostResponseDTO post1 = PostResponseDTO.builder()
+            .idPost(2)
+            .userId(123)
+            .date(LocalDate.of(2024, 5, 8))
+            .category(2)
+            .price(75.0)
+            .product(productDTO1)
+            .build();
 
-        ProductDTO productDTO2 = new ProductDTO();
-        productDTO2.setProductId(4);
-        productDTO2.setProductName("Product4");
-        productDTO2.setTypeProduct("TypeD");
-        productDTO2.setBrand("BrandW");
-        productDTO2.setColor("Yellow");
-        productDTO2.setNotes("Some notes about Product4");
+        PostResponseDTO post2 = PostResponseDTO.builder()
+            .idPost(5)
+            .userId(234)
+            .date(LocalDate.of(2024, 5, 28))
+            .category(2)
+            .price(65.0)
+            .product(productDTO2)
+            .build();
 
-        PostResponseDTO post1 = new PostResponseDTO(2, 123, LocalDate.of(2024, 5, 8), 2, 75.0, productDTO1);
-        PostResponseDTO post2 = new PostResponseDTO(5, 234, LocalDate.of(2024, 5, 28), 2, 65.0, productDTO2);
-
-        postResponseDTOList.add(post1);
-        postResponseDTOList.add(post2);
-
-        return postResponseDTOList;
-
+        return List.of(post1, post2);
     }
 
+    // TODO: Preguntar a Eze si es correcto generar la lista usando el otro método
+    //  o si debemos duplicar ese código
     public static List<PostResponseDTO> generatePostResponseDTODesc() {
+        List<PostResponseDTO> responses = new ArrayList<>(generatePostResponseDTOAsc());
+        Collections.reverse(responses);
+        return responses;
+    }
 
-        List<PostResponseDTO> postResponseDTOList = new ArrayList<>();
-        ProductDTO productDTO1 = new ProductDTO();
-        productDTO1.setProductId(2);
-        productDTO1.setProductName("Product2");
-        productDTO1.setTypeProduct("TypeB");
-        productDTO1.setBrand("BrandY");
-        productDTO1.setColor("Red");
-        productDTO1.setNotes("Some notes about Product2");
+    public static ProductDTO getProduct2() {
+        return ProductDTO.builder()
+            .productId(2)
+            .productName("Product2")
+            .typeProduct("TypeB")
+            .brand("BrandY")
+            .color("Red")
+            .notes("Some notes about Product2")
+            .build();
+    }
 
-        ProductDTO productDTO2 = new ProductDTO();
-        productDTO2.setProductId(4);
-        productDTO2.setProductName("Product4");
-        productDTO2.setTypeProduct("TypeD");
-        productDTO2.setBrand("BrandW");
-        productDTO2.setColor("Yellow");
-        productDTO2.setNotes("Some notes about Product4");
-
-        PostResponseDTO post1 = new PostResponseDTO(2, 123, LocalDate.of(2024, 5, 8), 2, 75.0, productDTO1);
-        PostResponseDTO post2 = new PostResponseDTO(5, 234, LocalDate.of(2024, 5, 28), 2, 65.0, productDTO2);
-
-        postResponseDTOList.add(post2);
-        postResponseDTOList.add(post1);
-
-        return postResponseDTOList;
+    public static ProductDTO getProduct4() {
+        return ProductDTO.builder()
+            .productId(4)
+            .productName("Product4")
+            .typeProduct("TypeD")
+            .brand("BrandW")
+            .color("Yellow")
+            .notes("Some notes about Product4")
+            .build();
     }
 
     public static SellerFollowersDTO generateListFollowersAsc() {
-        List<UserDTO> userDTOList = new ArrayList<>();
-        userDTOList.add(new UserDTO(789, "AliceSmith"));
-        userDTOList.add(new UserDTO(456, "JaneDoe"));
+        List<UserDTO> userDTOList = getFollowersDto();
         return new SellerFollowersDTO(234, "JaneSmith", userDTOList);
     }
 
     public static SellerFollowersDTO generateListFollowersDesc() {
-        List<UserDTO> userDTOList = new ArrayList<>();
-        userDTOList.add(new UserDTO(456, "JaneDoe"));
-        userDTOList.add(new UserDTO(789, "AliceSmith"));
+        List<UserDTO> userDTOList = new ArrayList<>(getFollowersDto());
+        Collections.reverse(userDTOList);
         return new SellerFollowersDTO(234, "JaneSmith", userDTOList);
     }
 
-    public static BuyerDTO generateListFollowedAsc() {
+    private static List<UserDTO> getFollowersDto() {
         List<UserDTO> userDTOList = new ArrayList<>();
-        userDTOList.add(new UserDTO(234, "JaneSmith"));
-        userDTOList.add(new UserDTO(123, "JohnDoe"));
+        userDTOList.add(new UserDTO(789, "AliceSmith"));
+        userDTOList.add(new UserDTO(456, "JaneDoe"));
+        return userDTOList;
+    }
+
+    public static BuyerDTO generateListFollowedAsc() {
+        List<UserDTO> userDTOList = getFollowedDtos();
         return new BuyerDTO(456, "JaneDoe", userDTOList);
     }
 
     public static BuyerDTO generateListFollowedDesc() {
-        List<UserDTO> userDTOList = new ArrayList<>();
-        userDTOList.add(new UserDTO(123, "JohnDoe"));
-        userDTOList.add(new UserDTO(234, "JaneSmith"));
+        List<UserDTO> userDTOList = getFollowedDtos();
+        Collections.reverse(userDTOList);
         return new BuyerDTO(456, "JaneDoe", userDTOList);
+    }
+
+    private static List<UserDTO> getFollowedDtos() {
+        List<UserDTO> userDTOList = new ArrayList<>();
+        userDTOList.add(new UserDTO(234, "JaneSmith"));
+        userDTOList.add(new UserDTO(123, "JohnDoe"));
+        return userDTOList;
     }
 
     public static <T> void assertEqualsDtoAsString(T expected, T result
