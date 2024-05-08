@@ -8,7 +8,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.dto.ProductDTO;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
+import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
+import org.example.be_java_hisp_w26_g04.util.crud.mapper.CustomMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -98,5 +100,23 @@ public class UtilTest {
         return postResponseDTOList;
     }
 
+    public static List<PostResponseDTO> mapListPostToPostResponseDto(List<Post> posts) {
+        return posts.stream().map(p -> CustomMapper.mapper(p, PostResponseDTO.class)).toList();
+    }
 
+    public static Post todayPost() {
+        return createPostOfDate(1, LocalDate.now());
+    }
+
+    public static Post weekAgoPost() {
+        return createPostOfDate(2, LocalDate.now().minusWeeks(1));
+    }
+
+    public static Post twoWeeksAgoPost() {
+        return createPostOfDate(3, LocalDate.now().minusWeeks(2));
+    }
+
+    public static Post createPostOfDate(int postId, LocalDate date) {
+        return new Post(postId, 1, date, null, 0, 0);
+    }
 }

@@ -3,6 +3,7 @@ package org.example.be_java_hisp_w26_g04.service.seller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.Optional;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
@@ -22,10 +23,14 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.mapListPostToPostResponseDto;
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.todayPost;
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.twoWeeksAgoPost;
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.weekAgoPost;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -116,7 +121,7 @@ class SellerServiceTest {
         sortGetPostFromFollower(expected, result);
     }
 
-
+    // Renombrar este metodo a assertEqualsPostResponseDTO
     private void sortGetPostFromFollower(List<PostResponseDTO> expected, List<PostResponseDTO> result) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
         Assertions.assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(result));
@@ -125,5 +130,25 @@ class SellerServiceTest {
 
     @Test
     void createNewPost() {
+    }
+
+    @Test
+    @DisplayName("T-0008 Verificar la consulta de publicaciones realizadas en las últimas 2 semanas")
+    public void returnPostsFromLastTwoWeeks() throws JsonProcessingException {
+        // Arrange
+        List<Post> posts = List.of(todayPost(), weekAgoPost(), twoWeeksAgoPost());
+        Seller seller = new Seller(1, "", posts, null, null);
+        Buyer buyer = new Buyer(1, "Valen", Set.of(seller.getUserId()));
+        List<PostResponseDTO> expected = mapListPostToPostResponseDto(posts);
+
+        when(buyerRepository.findById(1)).thenReturn(Optional.of(buyer));
+        when(sellerRepository.getPosts()).thenReturn(posts);
+
+        // Act
+        List<PostResponseDTO> result = service.sortGetPostFromFollower(1, "date_desc");
+
+        // Assert
+        assertEquals(2, result.size());
+        sortGetPostFromFollower(expected, result);
     }
 }
