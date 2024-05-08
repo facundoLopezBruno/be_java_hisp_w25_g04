@@ -2,6 +2,7 @@ package org.example.be_java_hisp_w26_g04.service.buyer;
 
 import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
 import org.example.be_java_hisp_w26_g04.dto.UserDTO;
+import org.example.be_java_hisp_w26_g04.enums.OrderEnum;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Seller;
@@ -10,6 +11,7 @@ import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.example.be_java_hisp_w26_g04.util.exceptionsHandler.ObjectExist;
 import org.example.be_java_hisp_w26_g04.util.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -68,9 +70,9 @@ public class BuyerService implements IBuyerService {
     @Override
     public BuyerDTO sortGetFollowed(int userId, String order) {
         BuyerDTO buyerDTO= getFollowed(userId);
-        if(order.equals("name_asc")){
+        if(order.equals(OrderEnum.NAME_ASC.getOrder())){
             buyerDTO.getFollowed().sort(Comparator.comparing(UserDTO::getUserName));
-        } else if (order.equals("name_desc")) {
+        } else if (order.equals(OrderEnum.NAME_DESC.getOrder())) {
             buyerDTO.getFollowed().sort(Comparator.comparing(UserDTO::getUserName).reversed());
         }
         else{
