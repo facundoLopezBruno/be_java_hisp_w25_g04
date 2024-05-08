@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
-import org.example.be_java_hisp_w26_g04.dto.ProductDTO;
+import org.example.be_java_hisp_w26_g04.dto.*;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.springframework.core.io.ClassPathResource;
@@ -97,6 +96,35 @@ public class UtilTest {
 
         return postResponseDTOList;
     }
+
+    public static SellerFollowersDTO generateListFollowersAsc(){
+        List<UserDTO> userDTOList = new ArrayList<>();
+        userDTOList.add(new UserDTO(789, "AliceSmith"));
+        userDTOList.add(new UserDTO(456, "JaneDoe"));
+        return new SellerFollowersDTO(234, "JaneSmith", userDTOList);
+    }
+
+    public static SellerFollowersDTO generateListFollowersDesc(){
+        List<UserDTO> userDTOList = new ArrayList<>();
+        userDTOList.add(new UserDTO(456, "JaneDoe"));
+        userDTOList.add(new UserDTO(789, "AliceSmith"));
+        return new SellerFollowersDTO(234, "JaneSmith", userDTOList);
+    }
+
+    public static BuyerDTO generateListFollowedAsc(){
+        List<UserDTO> userDTOList = new ArrayList<>();
+        userDTOList.add(new UserDTO(234, "JaneSmith"));
+        userDTOList.add(new UserDTO(123, "JohnDoe"));
+        return new BuyerDTO(456, "JaneDoe", userDTOList);
+    }
+
+    public static BuyerDTO generateListFollowedDesc(){
+        List<UserDTO> userDTOList = new ArrayList<>();
+        userDTOList.add(new UserDTO(123, "JohnDoe"));
+        userDTOList.add(new UserDTO(234, "JaneSmith"));
+        return new BuyerDTO(456, "JaneDoe", userDTOList);
+    }
+
 
 
 }
