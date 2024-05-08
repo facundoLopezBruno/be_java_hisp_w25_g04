@@ -1,4 +1,4 @@
-package org.example.be_java_hisp_w26_g04.util.crud.mapper;
+package org.example.be_java_hisp_w26_g04.util.mapper;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
