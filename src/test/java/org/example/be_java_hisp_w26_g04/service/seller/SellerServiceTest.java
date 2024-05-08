@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
+import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
+import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
@@ -23,9 +25,11 @@ import org.mockito.quality.Strictness;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,8 +65,24 @@ class SellerServiceTest {
     }
 
     @Test
-    void sortGetFollowers() {
+    @DisplayName("T-0003: Check if name_asc ordering exist")
+    void sortGetFollowersAscExist() {
+        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(123, "name_asc"));
     }
+
+    @Test
+    @DisplayName("T-0003: Check if name_desc ordering exist")
+    void sortGetFollowersDescExist() {
+        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(123, "name_desc"));
+    }
+
+    @Test
+    @DisplayName("T-0003: check if an invalid order param in name ordering throw exception ")
+    void sortGetFollowersIvalidNameORdering() {
+        Assertions.assertThrows(BadRequestException.class, () -> service.sortGetFollowers(123, "invalid_order_type"));
+    }
+
+
 
     @Test
     @DisplayName("T-0006: Verificar el correcto ordenamiento ascendente por fecha")
@@ -89,6 +109,8 @@ class SellerServiceTest {
         //Assert
         sortGetPostFromFollower(expected, result);
     }
+
+
 
     @Test
     @DisplayName("T-0006: Verificar el correcto ordenamiento descendente por fecha")

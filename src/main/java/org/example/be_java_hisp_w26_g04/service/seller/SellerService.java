@@ -21,10 +21,13 @@ import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
+import org.example.be_java_hisp_w26_g04.util.crud.OrderEnum;
 import org.example.be_java_hisp_w26_g04.util.crud.exceptionsHandler.ObjectExist;
 import org.example.be_java_hisp_w26_g04.util.crud.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static org.example.be_java_hisp_w26_g04.util.crud.OrderEnum.*;
 
 @Service
 @RequiredArgsConstructor
@@ -59,10 +62,10 @@ public class SellerService implements ISellerService {
         SellerFollowersDTO sellerFollowersDTO = getFollowers(userId);
         List<UserDTO> res = sellerFollowersDTO.getFollowers();
 
-        if (order.equals("name_asc")) {
+        if (order.equals(NAME_ASC.getOrder())) {
             res = sellerFollowersDTO.getFollowers().stream()
                     .sorted(Comparator.comparing(UserDTO::getUserName)).toList();
-        } else if (order.equals("name_desc")) {
+        } else if (order.equals(NAME_DESC.getOrder())) {
             res = sellerFollowersDTO.getFollowers().stream()
                     .sorted(Comparator.comparing(UserDTO::getUserName).reversed())
                     .toList();
@@ -87,7 +90,9 @@ public class SellerService implements ISellerService {
         List<UserDTO> followers = buyers.stream()
                 .map(follower -> CustomMapper.mapper(follower, UserDTO.class))
                 .toList();
-        return new SellerFollowersDTO(seller.getUserId(), seller.getUserName(), followers);
+        SellerFollowersDTO dto = new SellerFollowersDTO(seller.getUserId(), seller.getUserName(), followers);
+        System.out.println(dto);
+        return dto;
     }
 
     private List<PostResponseDTO> getPostsFromFollower(int userId) {
@@ -116,10 +121,10 @@ public class SellerService implements ISellerService {
     public List<PostResponseDTO> sortGetPostFromFollower(int userId, String order) {
         List<PostResponseDTO> ListPostDTO = getPostsFromFollower(userId);
         if (order != null) {
-            if (order.contains("date_asc")) {
+            if (order.contains(DATE_ASC.getOrder())) {
                 ListPostDTO.sort(Comparator.comparing(PostResponseDTO::getDate));
                 System.out.println(ListPostDTO);
-            } else if (order.contains("date_desc")) {
+            } else if (order.contains(DATE_DESC.getOrder())) {
                 ListPostDTO.sort(Comparator.comparing(PostResponseDTO::getDate).reversed());
             } else {
                 throw new BadRequestException();
