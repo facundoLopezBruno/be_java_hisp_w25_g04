@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
+import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
@@ -84,30 +85,29 @@ class SellerServiceTest {
 
     @Test
     @DisplayName("T-0004: Verifica el correcto ordenamiento descendente por nombre de los seguidores de un seller")
-    void sortGetFollowersDesc()throws JsonProcessingException{
+    void sortGetFollowersDesc()throws JsonProcessingException {
         //Arrange
-        int sellerId=234;
-        int buyerId1=456;
-        int buyerId2=789;
+        int sellerId = 234;
+        int buyerId1 = 456;
+        int buyerId2 = 789;
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x -> x.getUserId() == sellerId)
                 .findFirst());
-        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
-        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_ -> x_.getUserId() == buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x -> x.getUserId() == buyerId2).findFirst());
 
-        SellerFollowersDTO expected= UtilTest.generateListFollowersDesc();
+        SellerFollowersDTO expected = UtilTest.generateListFollowersDesc();
         //Act
-        SellerFollowersDTO result= service.sortGetFollowers(sellerId, "name_desc");
+        SellerFollowersDTO result = service.sortGetFollowers(sellerId, "name_desc");
         //Assert
-        Assertions.assertEquals(mapper.writeValueAsString(expected),mapper.writeValueAsString(result));
-
+        Assertions.assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(result));
     }
-
-    @Test
-    @DisplayName("T-0006: Verificar el correcto ordenamiento ascendente por fecha")
-    void sortGetPostFromFollowerAsc() throws JsonProcessingException {
+    @DisplayName("T-0005: Verificar que el tipo de ordenamiento por fecha exista")
+    void sortedFollowersByDateExist() {
         //Arrange
         int buyerId = 456;
+        String order = "date_asc";
+
         //Armamos un listado con todos los post de los vendedores
         List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
 
@@ -116,14 +116,54 @@ class SellerServiceTest {
                         .findFirst()
         );
 
-        when(sellerRepository.getPosts()).thenReturn(
-                posts
+        when(sellerRepository.getPosts()).thenReturn(posts);
+
+        //Act & Assert
+        Assertions.assertDoesNotThrow(() -> service.sortGetPostFromFollower(buyerId, order));
+    }
+
+    @Test
+    @DisplayName("T-0005: Retorna una excepción cuando el tipo de ordenamiento por fecha no exista")
+    void sortedFollowersByDateNotExist() {
+        //Arrange
+        int buyerId = 456;
+        String order = "foo";
+
+        //Armamos un listado con todos los post de los vendedores
+        List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
+
+        when(buyerRepository.findById(buyerId)).thenReturn(
+                buyers.stream().filter(b -> b.getUserId() == buyerId)
+                        .findFirst()
         );
+
+        when(sellerRepository.getPosts()).thenReturn(posts);
+
+        //Act & Assert
+        Assertions.assertThrows(BadRequestException.class, () -> service.sortGetPostFromFollower(buyerId, order));
+    }
+
+    @Test
+    @DisplayName("T-0006: Verificar el correcto ordenamiento ascendente por fecha")
+    void sortGetPostFromFollowerAsc() throws JsonProcessingException {
+        //Arrange
+        int buyerId = 456;
+        String order = "date_asc";
+
+        //Armamos un listado con todos los post de los vendedores
+        List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
+
+        when(buyerRepository.findById(buyerId)).thenReturn(
+                buyers.stream().filter(b -> b.getUserId() == buyerId)
+                        .findFirst()
+        );
+
+        when(sellerRepository.getPosts()).thenReturn(posts);
 
         List<PostResponseDTO> expected = UtilTest.generatePostResponseDTOAsc();
 
         //Act
-        List<PostResponseDTO> result = service.sortGetPostFromFollower(buyerId, "date_asc");
+        List<PostResponseDTO> result = service.sortGetPostFromFollower(buyerId, order);
 
         //Assert
         sortGetPostFromFollower(expected, result);
@@ -134,6 +174,8 @@ class SellerServiceTest {
     void sortGetPostFromFollowerDesc() throws JsonProcessingException {
         //Arrange
         int buyerId = 456;
+        String order = "date_desc";
+
         //Armamos un listado con todos los post de los vendedores
         List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
 
@@ -142,14 +184,12 @@ class SellerServiceTest {
                         .findFirst()
         );
 
-        when(sellerRepository.getPosts()).thenReturn(
-                posts
-        );
+        when(sellerRepository.getPosts()).thenReturn(posts);
 
         List<PostResponseDTO> expected = UtilTest.generatePostResponseDTODesc();
 
         //Act
-        List<PostResponseDTO> result = service.sortGetPostFromFollower(buyerId, "date_desc");
+        List<PostResponseDTO> result = service.sortGetPostFromFollower(buyerId, order);
 
         //Assert
         sortGetPostFromFollower(expected, result);
