@@ -178,7 +178,9 @@ class SellerServiceTest {
         List<Post> posts = List.of(todayPost(), weekAgoPost(), twoWeeksAgoPost());
         Seller seller = new Seller(1, "", posts, null, null);
         Buyer buyer = new Buyer(1, "Valen", Set.of(seller.getUserId()));
-        List<PostResponseDTO> expected = mapListPostToPostResponseDto(posts);
+
+        List<Post> expectedPosts = List.of(todayPost(), weekAgoPost());
+        List<PostResponseDTO> expected = mapListPostToPostResponseDto(expectedPosts);
 
         when(buyerRepository.findById(1)).thenReturn(Optional.of(buyer));
         when(sellerRepository.getPosts()).thenReturn(posts);
