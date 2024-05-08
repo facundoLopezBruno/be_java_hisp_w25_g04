@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
+import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
@@ -25,6 +26,7 @@ import org.mockito.quality.Strictness;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.Mockito.when;
@@ -62,6 +64,44 @@ class SellerServiceTest {
     }
 
     @Test
+    @DisplayName("T-0004: Verifica el correcto ordenamiento ascendente por nombre de los seguidores de un seller")
+    void sortGetFollowersAsc() throws JsonProcessingException{
+        //Arrange
+        int sellerId=234;
+        int buyerId1=456;
+        int buyerId2=789;
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+
+        SellerFollowersDTO expected= UtilTest.generateListFollowersAsc();
+        //Act
+        SellerFollowersDTO result= service.sortGetFollowers(sellerId, "name_asc");
+        //Assert
+        Assertions.assertEquals(mapper.writeValueAsString(expected),mapper.writeValueAsString(result));
+    }
+
+    @Test
+    @DisplayName("T-0004: Verifica el correcto ordenamiento descendente por nombre de los seguidores de un seller")
+    void sortGetFollowersDesc()throws JsonProcessingException {
+        //Arrange
+        int sellerId = 234;
+        int buyerId1 = 456;
+        int buyerId2 = 789;
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x -> x.getUserId() == sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_ -> x_.getUserId() == buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x -> x.getUserId() == buyerId2).findFirst());
+
+        SellerFollowersDTO expected = UtilTest.generateListFollowersDesc();
+        //Act
+        SellerFollowersDTO result = service.sortGetFollowers(sellerId, "name_desc");
+        //Assert
+        Assertions.assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(result));
+    }
     @DisplayName("T-0005: Verificar que el tipo de ordenamiento por fecha exista")
     void sortedFollowersByDateExist() {
         //Arrange
