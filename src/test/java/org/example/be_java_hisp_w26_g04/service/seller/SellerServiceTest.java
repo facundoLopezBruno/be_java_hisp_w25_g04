@@ -65,19 +65,39 @@ class SellerServiceTest {
     @Test
     @DisplayName("T-0003: Check if name_asc ordering exist")
     void sortGetFollowersAscExist() {
-        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(123, "name_asc"));
+        int sellerId=234;
+        int buyerId1=456;
+        int buyerId2=789;
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(sellerId, "name_asc"));
     }
 
     @Test
     @DisplayName("T-0003: Check if name_desc ordering exist")
     void sortGetFollowersDescExist() {
-        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(123, "name_desc"));
-    }
+        int sellerId=234;
+        int buyerId1=456;
+        int buyerId2=789;
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(sellerId, "name_desc"));    }
 
     @Test
     @DisplayName("T-0003: check if an invalid order param in name ordering throw exception ")
     void sortGetFollowersIvalidNameORdering() {
-        Assertions.assertThrows(BadRequestException.class, () -> service.sortGetFollowers(123, "invalid_order_type"));
+        int sellerId=234;
+        int buyerId1=456;
+        int buyerId2=789;
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+        Assertions.assertThrows(BadRequestException.class, () -> service.sortGetFollowers(sellerId, "invalid_order_type"));
     }
 
     @Test

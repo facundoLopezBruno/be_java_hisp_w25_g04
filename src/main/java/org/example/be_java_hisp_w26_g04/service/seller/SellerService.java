@@ -21,13 +21,12 @@ import org.example.be_java_hisp_w26_g04.model.Post;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
-import org.example.be_java_hisp_w26_g04.util.crud.OrderEnum;
-import org.example.be_java_hisp_w26_g04.util.crud.exceptionsHandler.ObjectExist;
-import org.example.be_java_hisp_w26_g04.util.crud.mapper.CustomMapper;
+import org.example.be_java_hisp_w26_g04.util.exceptionsHandler.ObjectExist;
+import org.example.be_java_hisp_w26_g04.util.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.example.be_java_hisp_w26_g04.util.crud.OrderEnum.*;
+import static org.example.be_java_hisp_w26_g04.enums.OrderEnum.*;
 
 @Service
 @RequiredArgsConstructor

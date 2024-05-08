@@ -1,4 +1,4 @@
-package org.example.be_java_hisp_w26_g04.util.crud;
+package org.example.be_java_hisp_w26_g04.enums;
 
 import lombok.Getter;
 

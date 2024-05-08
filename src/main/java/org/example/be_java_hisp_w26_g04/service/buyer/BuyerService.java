@@ -1,6 +1,5 @@
 package org.example.be_java_hisp_w26_g04.service.buyer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.be_java_hisp_w26_g04.dto.BuyerDTO;
 import org.example.be_java_hisp_w26_g04.dto.UserDTO;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
@@ -8,8 +7,8 @@ import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
-import org.example.be_java_hisp_w26_g04.util.crud.exceptionsHandler.ObjectExist;
-import org.example.be_java_hisp_w26_g04.util.crud.mapper.CustomMapper;
+import org.example.be_java_hisp_w26_g04.util.exceptionsHandler.ObjectExist;
+import org.example.be_java_hisp_w26_g04.util.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
