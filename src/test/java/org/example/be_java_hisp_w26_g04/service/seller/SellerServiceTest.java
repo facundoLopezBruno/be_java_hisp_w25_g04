@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.Optional;
+import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
+import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
 import org.example.be_java_hisp_w26_g04.exceptions.BadRequestException;
 import org.example.be_java_hisp_w26_g04.model.Buyer;
 import org.example.be_java_hisp_w26_g04.model.Post;
@@ -24,7 +26,10 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.mapListPostToPostResponseDto;
@@ -32,6 +37,7 @@ import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.todayPost;
 import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.twoWeeksAgoPost;
 import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.weekAgoPost;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,10 +69,82 @@ class SellerServiceTest {
     }
 
     @Test
-    void getFollowers() {
+    @DisplayName("T-0003: Check if name_asc ordering exist")
+    void sortGetFollowersAscExist() {
+        int sellerId=234;
+        int buyerId1=456;
+        int buyerId2=789;
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(sellerId, "name_asc"));
     }
 
     @Test
+    @DisplayName("T-0003: Check if name_desc ordering exist")
+    void sortGetFollowersDescExist() {
+        int sellerId=234;
+        int buyerId1=456;
+        int buyerId2=789;
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(sellerId, "name_desc"));    }
+
+    @Test
+    @DisplayName("T-0003: check if an invalid order param in name ordering throw exception ")
+    void sortGetFollowersIvalidNameORdering() {
+        int sellerId=234;
+        int buyerId1=456;
+        int buyerId2=789;
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+        Assertions.assertThrows(BadRequestException.class, () -> service.sortGetFollowers(sellerId, "invalid_order_type"));
+    }
+
+    @Test
+    @DisplayName("T-0004: Verifica el correcto ordenamiento ascendente por nombre de los seguidores de un seller")
+    void sortGetFollowersAsc() throws JsonProcessingException{
+        //Arrange
+        int sellerId=234;
+        int buyerId1=456;
+        int buyerId2=789;
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
+
+        SellerFollowersDTO expected= UtilTest.generateListFollowersAsc();
+        //Act
+        SellerFollowersDTO result= service.sortGetFollowers(sellerId, "name_asc");
+        //Assert
+        Assertions.assertEquals(mapper.writeValueAsString(expected),mapper.writeValueAsString(result));
+    }
+
+    @Test
+    @DisplayName("T-0004: Verifica el correcto ordenamiento descendente por nombre de los seguidores de un seller")
+    void sortGetFollowersDesc()throws JsonProcessingException {
+        //Arrange
+        int sellerId = 234;
+        int buyerId1 = 456;
+        int buyerId2 = 789;
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x -> x.getUserId() == sellerId)
+                .findFirst());
+        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_ -> x_.getUserId() == buyerId1).findFirst());
+        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x -> x.getUserId() == buyerId2).findFirst());
+
+        SellerFollowersDTO expected = UtilTest.generateListFollowersDesc();
+        //Act
+        SellerFollowersDTO result = service.sortGetFollowers(sellerId, "name_desc");
+        //Assert
+        Assertions.assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(result));
+    }
     @DisplayName("T-0005: Verificar que el tipo de ordenamiento por fecha exista")
     void sortedFollowersByDateExist() {
         //Arrange
@@ -169,6 +247,26 @@ class SellerServiceTest {
 
     @Test
     void createNewPost() {
+    }
+
+    @Test
+    @DisplayName("T-0007: Verificar que la cantidad de seguidores de un determinado usuario sea correcta.")
+    public void countFollowersTest() throws JsonProcessingException {
+        //Arrange
+        int sellerId = 123;
+        FollowersCountDTO expectedFollowersCountDTO = new FollowersCountDTO();
+        expectedFollowersCountDTO.setUserId(123);
+        expectedFollowersCountDTO.setUserName("JohnDoe");
+        expectedFollowersCountDTO.setFollowersCount(1);
+        ObjectMapper om = new ObjectMapper();
+        //Act
+        when(sellerRepository.findById(sellerId)).thenReturn(
+                sellers.stream().filter(b -> b.getUserId() == sellerId)
+                        .findFirst()
+        );
+        FollowersCountDTO resultFollowersCountDTO = service.findFollowers(sellerId);
+        //Assert
+        Assertions.assertEquals(om.writeValueAsString(expectedFollowersCountDTO), om.writeValueAsString(resultFollowersCountDTO));
     }
 
     @Test

@@ -1,6 +1,9 @@
 package org.example.be_java_hisp_w26_g04.enums;
 
-public enum SortOrder {
+import lombok.Getter;
+
+@Getter
+public enum OrderEnum {
     DATE_ASC("date_asc"),
     DATE_DESC("date_desc"),
     NAME_ASC("name_asc"),
@@ -8,11 +11,8 @@ public enum SortOrder {
 
     private final String order;
 
-    SortOrder(String order) {
+    OrderEnum(String order) {
         this.order = order;
     }
 
-    public String getOrder() {
-        return this.order;
-    }
 }
