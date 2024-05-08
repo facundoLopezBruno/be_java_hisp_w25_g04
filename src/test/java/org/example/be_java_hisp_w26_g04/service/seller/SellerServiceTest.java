@@ -1,9 +1,20 @@
 package org.example.be_java_hisp_w26_g04.service.seller;
 
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.assertEqualsDtoAsString;
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.mapListPostToPostResponseDto;
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.todayPost;
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.twoWeeksAgoPost;
+import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.weekAgoPost;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.example.be_java_hisp_w26_g04.dto.FollowersCountDTO;
 import org.example.be_java_hisp_w26_g04.dto.PostResponseDTO;
 import org.example.be_java_hisp_w26_g04.dto.SellerFollowersDTO;
@@ -14,7 +25,6 @@ import org.example.be_java_hisp_w26_g04.model.Seller;
 import org.example.be_java_hisp_w26_g04.repository.buyer.IBuyersRepository;
 import org.example.be_java_hisp_w26_g04.repository.seller.ISellerRepository;
 import org.example.be_java_hisp_w26_g04.service.util.UtilTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,21 +35,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.mapListPostToPostResponseDto;
-import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.todayPost;
-import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.twoWeeksAgoPost;
-import static org.example.be_java_hisp_w26_g04.service.util.UtilTest.weekAgoPost;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
-
+// Disclaimer:
+// Hay muchos tests que se configuran igual y se pueden seguir abstrayendo y parametrizando
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class SellerServiceTest {
@@ -61,7 +58,6 @@ class SellerServiceTest {
     public void setUp() throws IOException {
         sellers = UtilTest.getSellers();
         buyers = UtilTest.getBuyers();
-
     }
 
     @Test
@@ -71,80 +67,90 @@ class SellerServiceTest {
     @Test
     @DisplayName("T-0003: Check if name_asc ordering exist")
     void sortGetFollowersAscExist() {
-        int sellerId=234;
-        int buyerId1=456;
-        int buyerId2=789;
-        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
-                .findFirst());
-        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
-        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
-        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(sellerId, "name_asc"));
+        int sellerId = 234;
+        int buyerId1 = 456;
+        int buyerId2 = 789;
+
+        when(sellerRepository.findById(sellerId)).thenReturn(getSellerById(sellerId));
+        when(buyerRepository.findById(buyerId1)).thenReturn(getBuyerById(buyerId1));
+        when(buyerRepository.findById(buyerId2)).thenReturn(getBuyerById(buyerId2));
+
+        assertDoesNotThrow(() -> service.sortGetFollowers(sellerId, "name_asc"));
     }
 
     @Test
     @DisplayName("T-0003: Check if name_desc ordering exist")
     void sortGetFollowersDescExist() {
-        int sellerId=234;
-        int buyerId1=456;
-        int buyerId2=789;
-        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
-                .findFirst());
-        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
-        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
-        Assertions.assertDoesNotThrow(() -> service.sortGetFollowers(sellerId, "name_desc"));    }
+        int sellerId = 234;
+        int buyerId1 = 456;
+        int buyerId2 = 789;
+
+        when(sellerRepository.findById(sellerId)).thenReturn(getSellerById(sellerId));
+        when(buyerRepository.findById(buyerId1)).thenReturn(getBuyerById(buyerId1));
+        when(buyerRepository.findById(buyerId2)).thenReturn(getBuyerById(buyerId2));
+
+        assertDoesNotThrow(() -> service.sortGetFollowers(sellerId, "name_desc"));
+    }
 
     @Test
     @DisplayName("T-0003: check if an invalid order param in name ordering throw exception ")
     void sortGetFollowersIvalidNameORdering() {
-        int sellerId=234;
-        int buyerId1=456;
-        int buyerId2=789;
-        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
-                .findFirst());
-        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
-        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
-        Assertions.assertThrows(BadRequestException.class, () -> service.sortGetFollowers(sellerId, "invalid_order_type"));
+        int sellerId = 234;
+        int buyerId1 = 456;
+        int buyerId2 = 789;
+
+        when(sellerRepository.findById(sellerId)).thenReturn(getSellerById(sellerId));
+        when(buyerRepository.findById(buyerId1)).thenReturn(getBuyerById(buyerId2));
+        when(buyerRepository.findById(buyerId2)).thenReturn(getBuyerById(buyerId2));
+
+        assertThrows(BadRequestException.class, () ->
+            service.sortGetFollowers(sellerId, "invalid_order_type")
+        );
     }
 
     @Test
     @DisplayName("T-0004: Verifica el correcto ordenamiento ascendente por nombre de los seguidores de un seller")
-    void sortGetFollowersAsc() throws JsonProcessingException{
-        //Arrange
-        int sellerId=234;
-        int buyerId1=456;
-        int buyerId2=789;
-        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x-> x.getUserId()==sellerId)
-                .findFirst());
-        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_-> x_.getUserId()==buyerId1).findFirst());
-        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x-> x.getUserId()==buyerId2).findFirst());
-
-        SellerFollowersDTO expected= UtilTest.generateListFollowersAsc();
-        //Act
-        SellerFollowersDTO result= service.sortGetFollowers(sellerId, "name_asc");
-        //Assert
-        Assertions.assertEquals(mapper.writeValueAsString(expected),mapper.writeValueAsString(result));
-    }
-
-    @Test
-    @DisplayName("T-0004: Verifica el correcto ordenamiento descendente por nombre de los seguidores de un seller")
-    void sortGetFollowersDesc()throws JsonProcessingException {
+    void sortGetFollowersAsc() throws JsonProcessingException {
         //Arrange
         int sellerId = 234;
         int buyerId1 = 456;
         int buyerId2 = 789;
-        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        when(sellerRepository.findById(sellerId)).thenReturn(sellers.stream().filter(x -> x.getUserId() == sellerId)
-                .findFirst());
-        when(buyerRepository.findById(buyerId1)).thenReturn(buyers.stream().filter(x_ -> x_.getUserId() == buyerId1).findFirst());
-        when(buyerRepository.findById(buyerId2)).thenReturn(buyers.stream().filter(x -> x.getUserId() == buyerId2).findFirst());
+
+        when(sellerRepository.findById(sellerId)).thenReturn(getSellerById(sellerId));
+        when(buyerRepository.findById(buyerId1)).thenReturn(getBuyerById(buyerId1));
+        when(buyerRepository.findById(buyerId2)).thenReturn(getBuyerById(buyerId2));
+
+        SellerFollowersDTO expected = UtilTest.generateListFollowersAsc();
+
+        //Act
+        SellerFollowersDTO result = service.sortGetFollowers(sellerId, "name_asc");
+
+        //Assert
+        assertEqualsDtoAsString(expected, result);
+    }
+
+    @Test
+    @DisplayName("T-0004: Verifica el correcto ordenamiento descendente por nombre de los seguidores de un seller")
+    void sortGetFollowersDesc() throws JsonProcessingException {
+        //Arrange
+        int sellerId = 234;
+        int buyerId1 = 456;
+        int buyerId2 = 789;
+
+        when(sellerRepository.findById(sellerId)).thenReturn(getSellerById(sellerId));
+        when(buyerRepository.findById(buyerId1)).thenReturn(getBuyerById(buyerId1));
+        when(buyerRepository.findById(buyerId2)).thenReturn(getBuyerById(buyerId2));
 
         SellerFollowersDTO expected = UtilTest.generateListFollowersDesc();
+
         //Act
         SellerFollowersDTO result = service.sortGetFollowers(sellerId, "name_desc");
+
         //Assert
-        Assertions.assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(result));
+        assertEqualsDtoAsString(expected, result);
     }
+
+    @Test
     @DisplayName("T-0005: Verificar que el tipo de ordenamiento por fecha exista")
     void sortedFollowersByDateExist() {
         //Arrange
@@ -154,15 +160,11 @@ class SellerServiceTest {
         //Armamos un listado con todos los post de los vendedores
         List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
 
-        when(buyerRepository.findById(buyerId)).thenReturn(
-                buyers.stream().filter(b -> b.getUserId() == buyerId)
-                        .findFirst()
-        );
-
+        when(buyerRepository.findById(buyerId)).thenReturn(getBuyerById(buyerId));
         when(sellerRepository.getPosts()).thenReturn(posts);
 
         //Act & Assert
-        Assertions.assertDoesNotThrow(() -> service.sortGetPostFromFollower(buyerId, order));
+        assertDoesNotThrow(() -> service.sortGetPostFromFollower(buyerId, order));
     }
 
     @Test
@@ -175,15 +177,13 @@ class SellerServiceTest {
         //Armamos un listado con todos los post de los vendedores
         List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
 
-        when(buyerRepository.findById(buyerId)).thenReturn(
-                buyers.stream().filter(b -> b.getUserId() == buyerId)
-                        .findFirst()
-        );
-
+        when(buyerRepository.findById(buyerId)).thenReturn(getBuyerById(buyerId));
         when(sellerRepository.getPosts()).thenReturn(posts);
 
         //Act & Assert
-        Assertions.assertThrows(BadRequestException.class, () -> service.sortGetPostFromFollower(buyerId, order));
+        assertThrows(BadRequestException.class, () ->
+            service.sortGetPostFromFollower(buyerId, order)
+        );
     }
 
     @Test
@@ -196,11 +196,7 @@ class SellerServiceTest {
         //Armamos un listado con todos los post de los vendedores
         List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
 
-        when(buyerRepository.findById(buyerId)).thenReturn(
-                buyers.stream().filter(b -> b.getUserId() == buyerId)
-                        .findFirst()
-        );
-
+        when(buyerRepository.findById(buyerId)).thenReturn(getBuyerById(buyerId));
         when(sellerRepository.getPosts()).thenReturn(posts);
 
         List<PostResponseDTO> expected = UtilTest.generatePostResponseDTOAsc();
@@ -209,7 +205,7 @@ class SellerServiceTest {
         List<PostResponseDTO> result = service.sortGetPostFromFollower(buyerId, order);
 
         //Assert
-        sortGetPostFromFollower(expected, result);
+        assertEqualsDtoAsString(expected, result);
     }
 
     @Test
@@ -222,11 +218,7 @@ class SellerServiceTest {
         //Armamos un listado con todos los post de los vendedores
         List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
 
-        when(buyerRepository.findById(buyerId)).thenReturn(
-                buyers.stream().filter(b -> b.getUserId() == buyerId)
-                        .findFirst()
-        );
-
+        when(buyerRepository.findById(buyerId)).thenReturn(getBuyerById(buyerId));
         when(sellerRepository.getPosts()).thenReturn(posts);
 
         List<PostResponseDTO> expected = UtilTest.generatePostResponseDTODesc();
@@ -235,18 +227,7 @@ class SellerServiceTest {
         List<PostResponseDTO> result = service.sortGetPostFromFollower(buyerId, order);
 
         //Assert
-        sortGetPostFromFollower(expected, result);
-    }
-
-    // Renombrar este metodo a assertEqualsPostResponseDTO
-    private void sortGetPostFromFollower(List<PostResponseDTO> expected, List<PostResponseDTO> result) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        Assertions.assertEquals(mapper.writeValueAsString(expected), mapper.writeValueAsString(result));
-    }
-
-
-    @Test
-    void createNewPost() {
+        assertEqualsDtoAsString(expected, result);
     }
 
     @Test
@@ -254,19 +235,19 @@ class SellerServiceTest {
     public void countFollowersTest() throws JsonProcessingException {
         //Arrange
         int sellerId = 123;
+
         FollowersCountDTO expectedFollowersCountDTO = new FollowersCountDTO();
         expectedFollowersCountDTO.setUserId(123);
         expectedFollowersCountDTO.setUserName("JohnDoe");
         expectedFollowersCountDTO.setFollowersCount(1);
-        ObjectMapper om = new ObjectMapper();
+
+        when(sellerRepository.findById(sellerId)).thenReturn(getSellerById(sellerId));
+
         //Act
-        when(sellerRepository.findById(sellerId)).thenReturn(
-                sellers.stream().filter(b -> b.getUserId() == sellerId)
-                        .findFirst()
-        );
         FollowersCountDTO resultFollowersCountDTO = service.findFollowers(sellerId);
+
         //Assert
-        Assertions.assertEquals(om.writeValueAsString(expectedFollowersCountDTO), om.writeValueAsString(resultFollowersCountDTO));
+        assertEqualsDtoAsString(expectedFollowersCountDTO, resultFollowersCountDTO);
     }
 
     @Test
@@ -288,6 +269,14 @@ class SellerServiceTest {
 
         // Assert
         assertEquals(2, result.size());
-        sortGetPostFromFollower(expected, result);
+        assertEqualsDtoAsString(expected, result);
+    }
+
+    Optional<Seller> getSellerById(int id) {
+        return sellers.stream().filter(x -> x.getUserId() == id).findFirst();
+    }
+
+    Optional<Buyer> getBuyerById(int id) {
+        return buyers.stream().filter(x_ -> x_.getUserId() == id).findFirst();
     }
 }
