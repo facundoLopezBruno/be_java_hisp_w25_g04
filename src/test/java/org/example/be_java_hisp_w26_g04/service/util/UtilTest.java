@@ -60,7 +60,7 @@ public class UtilTest {
         productDTO2.setColor("Yellow");
         productDTO2.setNotes("Some notes about Product4");
 
-        PostResponseDTO post1=new PostResponseDTO(2, 123, LocalDate.of(2024, 4, 24) , 2, 75.0, productDTO1);
+        PostResponseDTO post1=new PostResponseDTO(2, 123, LocalDate.of(2024, 5, 8) , 2, 75.0, productDTO1);
         PostResponseDTO post2= new PostResponseDTO(5, 234, LocalDate.of(2024, 5, 28) , 2, 65.0, productDTO2);
 
         postResponseDTOList.add(post1);
@@ -89,7 +89,7 @@ public class UtilTest {
         productDTO2.setColor("Yellow");
         productDTO2.setNotes("Some notes about Product4");
 
-        PostResponseDTO post1 = new PostResponseDTO(2, 123, LocalDate.of(2024, 4, 24), 2, 75.0, productDTO1);
+        PostResponseDTO post1 = new PostResponseDTO(2, 123, LocalDate.of(2024, 5, 8), 2, 75.0, productDTO1);
         PostResponseDTO post2 = new PostResponseDTO(5, 234, LocalDate.of(2024, 5, 28), 2, 65.0, productDTO2);
 
         postResponseDTOList.add(post2);
