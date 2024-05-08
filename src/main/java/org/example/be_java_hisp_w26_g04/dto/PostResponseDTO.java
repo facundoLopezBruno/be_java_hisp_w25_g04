@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Builder
 public class PostResponseDTO {
     @JsonProperty("post_id")
     @JsonAlias("idPost")
