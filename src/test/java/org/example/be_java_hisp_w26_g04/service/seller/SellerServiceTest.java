@@ -157,8 +157,8 @@ class SellerServiceTest {
         int buyerId = 456;
         String order = "date_asc";
 
-        //Armamos un listado con todos los post de los vendedores
-        List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
+
+        List<Post> posts = getPosts();
 
         when(buyerRepository.findById(buyerId)).thenReturn(getBuyerById(buyerId));
         when(sellerRepository.getPosts()).thenReturn(posts);
@@ -174,8 +174,7 @@ class SellerServiceTest {
         int buyerId = 456;
         String order = "foo";
 
-        //Armamos un listado con todos los post de los vendedores
-        List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
+        List<Post> posts = getPosts();
 
         when(buyerRepository.findById(buyerId)).thenReturn(getBuyerById(buyerId));
         when(sellerRepository.getPosts()).thenReturn(posts);
@@ -193,8 +192,7 @@ class SellerServiceTest {
         int buyerId = 456;
         String order = "date_asc";
 
-        //Armamos un listado con todos los post de los vendedores
-        List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
+        List<Post> posts = getPosts();
 
         when(buyerRepository.findById(buyerId)).thenReturn(getBuyerById(buyerId));
         when(sellerRepository.getPosts()).thenReturn(posts);
@@ -215,8 +213,7 @@ class SellerServiceTest {
         int buyerId = 456;
         String order = "date_desc";
 
-        //Armamos un listado con todos los post de los vendedores
-        List<Post> posts = sellers.stream().flatMap(x -> x.getListPost().stream()).toList();
+        List<Post> posts = getPosts();
 
         when(buyerRepository.findById(buyerId)).thenReturn(getBuyerById(buyerId));
         when(sellerRepository.getPosts()).thenReturn(posts);
@@ -279,4 +276,6 @@ class SellerServiceTest {
     Optional<Buyer> getBuyerById(int id) {
         return buyers.stream().filter(x_ -> x_.getUserId() == id).findFirst();
     }
+
+    List<Post> getPosts() {return sellers.stream().flatMap(x -> x.getListPost().stream()).toList();}
 }
