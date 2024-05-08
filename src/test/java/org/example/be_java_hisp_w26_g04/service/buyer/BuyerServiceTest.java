@@ -49,7 +49,7 @@ class BuyerServiceTest {
     }
 
     @Test
-    @DisplayName("T-0001 El usuario a seguir existe OK")
+    @DisplayName("T-0001: El usuario a seguir existe OK")
     void followSellerOkTest() {
         //Arrange
         int buyerId = 1;
@@ -77,7 +77,7 @@ class BuyerServiceTest {
     }
 
     @Test
-    @DisplayName("T-0001 El usuario a seguir NO existe")
+    @DisplayName("T-0001: El usuario a seguir NO existe")
     void followSellerNotOkTest() {
         //Arrange
         int buyerId = 1;
@@ -92,7 +92,7 @@ class BuyerServiceTest {
     }
 
     @Test
-    @DisplayName("T-0002 El usuario a dejar de seguir existe")
+    @DisplayName("T-0002: El usuario a dejar de seguir existe")
     void unfollowSellerOkTest() {
         //Arrange
         int buyerId = 1;
@@ -122,7 +122,7 @@ class BuyerServiceTest {
     }
 
     @Test
-    @DisplayName("T-0002 El usuario a dejar de seguir NO existe")
+    @DisplayName("T-0002: El usuario a dejar de seguir NO existe")
     void unfollowSeller_UserNotExistsTest() {
         //Arrange
         int buyerId = 1;

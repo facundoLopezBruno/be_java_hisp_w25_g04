@@ -1,5 +1,6 @@
 package org.example.be_java_hisp_w26_g04.exceptions;
 
+import jakarta.validation.ConstraintViolationException;
 import org.example.be_java_hisp_w26_g04.dto.BadResponseDTO;
 import org.example.be_java_hisp_w26_g04.dto.ValidationErrorsResponseDTO;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,19 @@ public class GlobalExceptionHandler {
     Map<String, String> errorMap = new HashMap<>();
     ex.getBindingResult().getFieldErrors().forEach(error -> {
       errorMap.put(error.getField(), error.getDefaultMessage());
+    });
+
+    ValidationErrorsResponseDTO errorsResponseDTO =
+            new ValidationErrorsResponseDTO("Hay errores de validación", errorMap);
+
+    return ResponseEntity.badRequest().body(errorsResponseDTO);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<ValidationErrorsResponseDTO> handleValidationConstraintExceptions(ConstraintViolationException ex) {
+    Map<String, String> errorMap = new HashMap<>();
+    ex.getConstraintViolations().forEach(error -> {
+      errorMap.put(error.getPropertyPath().toString(), error.getMessage());
     });
 
     ValidationErrorsResponseDTO errorsResponseDTO =

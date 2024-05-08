@@ -65,7 +65,7 @@ class SellerServiceTest {
     }
 
     @Test
-    @DisplayName("T-0003: Check if name_asc ordering exist")
+    @DisplayName("T-0003: Verifica si ordenamiento name_asc existe")
     void sortGetFollowersAscExist() {
         int sellerId = 234;
         int buyerId1 = 456;
@@ -79,7 +79,7 @@ class SellerServiceTest {
     }
 
     @Test
-    @DisplayName("T-0003: Check if name_desc ordering exist")
+    @DisplayName("T-0003: Verifica si ordenamiento name_desc existe")
     void sortGetFollowersDescExist() {
         int sellerId = 234;
         int buyerId1 = 456;
@@ -93,7 +93,7 @@ class SellerServiceTest {
     }
 
     @Test
-    @DisplayName("T-0003: check if an invalid order param in name ordering throw exception ")
+    @DisplayName("T-0003: Verifica si se lanza una excepcion con un ordenamiento invalido")
     void sortGetFollowersIvalidNameORdering() {
         int sellerId = 234;
         int buyerId1 = 456;
