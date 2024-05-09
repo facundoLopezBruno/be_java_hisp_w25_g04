@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.example.be_java_hisp_w26_g04.util.validation.UtilMinValidation.MIN_USER_ID_MESSAGE;
-import static org.example.be_java_hisp_w26_g04.util.validation.UtilMinValidation.MIN_USER_ID_VALUE;
+import static org.example.be_java_hisp_w26_g04.util.validation.UtilValidation.MIN_USER_ID_MESSAGE;
+import static org.example.be_java_hisp_w26_g04.util.validation.UtilValidation.MIN_USER_ID_VALUE;
 
 @RestController
 @RequestMapping("/products")
